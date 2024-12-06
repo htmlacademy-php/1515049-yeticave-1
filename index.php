@@ -29,7 +29,7 @@ $user_name = 'Наталья'; // укажите здесь ваше имя
         <nav class="user-menu">
 
         <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
-        <?php if($is_auth): ?>
+        <?php if($is_auth === 1): ?>
             <div class="user-menu__logged">
                 <p><?= htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8'); ?></p>
                 <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
