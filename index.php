@@ -39,7 +39,8 @@ $ads = [
 ];
 function format_price(int $price): string
 {
-    $result = number_format($price, 0, '.', ' ');
+    $result = ceil($price);
+    $result = number_format($result, 0, '.', ' ');
     return $result . ' ₽';
 }
 
