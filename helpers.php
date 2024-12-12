@@ -1,17 +1,6 @@
 <?php
 
 /**
- * Форматирует цену лота
- * @param int|float $price
- * @return string
- */
-function formatPrice(int|float $price): string
-{
-    $price = number_format($price, 0, '.', ' ');
-    return $price . ' ₽';
-}
-
-/**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
  *
  * Примеры использования:
