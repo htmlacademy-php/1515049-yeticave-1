@@ -3,6 +3,10 @@
 require_once 'helpers.php';
 require_once 'functions.php';
 require_once 'data.php';
+/** @var array $categories */
+/** @var array $lots */
+/** @var  $isAuth */
+/** @var  $userName */
 
 $page_content = include_template('main.php', [
     'categories' => $categories,
