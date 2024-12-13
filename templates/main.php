@@ -35,8 +35,8 @@
                             <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["price"]), null, 'UTF-8') ?></span>
                         </div>
                         <?php
-                        $hours = calculatesRemainingTime(htmlspecialchars($lot["finish_date"]))[0];
-                        $minutes = calculatesRemainingTime(htmlspecialchars($lot["finish_date"]))[1];
+                        $hours = calculatesRemainingTime($lot["finish_date"])[0];
+                        $minutes = calculatesRemainingTime($lot["finish_date"])[1];
 
                         $class = ($hours < 1) ? "timer--finishing" : '';
                         ?>
