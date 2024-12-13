@@ -5,6 +5,8 @@
     <ul class="promo__list">
         <!--заполните этот список из массива категорий-->
         <?php
+        /** @var array $categories */
+        /** @var array $lots */
         foreach ($categories as $category): ?>
             <li class="promo__item promo__item--boards">
                 <a class="promo__link" href="../pages/all-lots.html"><?= htmlspecialchars($category, null, 'UTF-8') ?>></a>
@@ -34,9 +36,16 @@
                             <span class="lot__amount">Начальная цена</span>
                             <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["price"]), null, 'UTF-8') ?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <?php
+                        $hours = calculatesRemainingTime($lot["finish_date"])[0];
+                        $minutes = calculatesRemainingTime($lot["finish_date"])[1];
+
+                        $class = ($hours < 1) ? "timer--finishing" : '';
+                        ?>
+                        <div class="lot__timer timer <?= $class ?>">
+                            <?=$hours ?>:<?=$minutes ?>
                         </div>
+
                     </div>
                 </div>
             </li>
