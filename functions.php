@@ -7,7 +7,7 @@
  * @return array
  *
  */
-function calculatesRemainingTime($date)
+function calculatesRemainingTime(string $date): array
 {
     $date_now = time();
     $date = strtotime($date);
