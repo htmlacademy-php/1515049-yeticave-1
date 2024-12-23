@@ -9,7 +9,7 @@
         /** @var array $lots */
         foreach ($categories as $category): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="../pages/all-lots.html"><?= htmlspecialchars($category, null, 'UTF-8') ?>></a>
+                <a class="promo__link" href="../pages/all-lots.html"><?= htmlspecialchars($category) ?>></a>
             </li>
         <?php
         endforeach; ?>
@@ -25,16 +25,16 @@
         foreach ($lots as $lot): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="<?= htmlspecialchars($lot["img_url"], null, 'UTF-8') ?>" width="350" height="260" alt="<?= $lot["title"] ?>">
+                    <img src="<?= htmlspecialchars($lot["img_url"]) ?>" width="350" height="260" alt="<?= $lot["title"] ?>">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?= htmlspecialchars($lot["category"], null, 'UTF-8') ?></span>
-                    <h3 class="lot__title"><a class="text-link" href="../pages/lot.html"><?= htmlspecialchars($lot["title"], null, 'UTF-8') ?></a>
+                    <span class="lot__category"><?= htmlspecialchars($lot["category"]) ?></span>
+                    <h3 class="lot__title"><a class="text-link" href="../pages/lot.html"><?= htmlspecialchars($lot["title"]) ?></a>
                     </h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Начальная цена</span>
-                            <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["price"]), null, 'UTF-8') ?></span>
+                            <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["price"])) ?></span>
                         </div>
                         <?php
                         $hours = calculatesRemainingTime($lot["finish_date"])[0];

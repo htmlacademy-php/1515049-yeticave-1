@@ -12,7 +12,7 @@ $lots = [
         "category" => $categories[0],
         "price" => 10999,
         "img_url" => "img/lot-1.jpg",
-        "finish_date" => "2024-12-19"
+        "finish_date" => "2024-12-12"
     ],
     [
         "title" => "DC Ply Mens 2016/2017 Snowboard",
