@@ -8,12 +8,12 @@ require_once 'data.php';
 /** @var  $isAuth */
 /** @var  $userName */
 
-$pageContent = include_template('main.php', [
+$pageContent = includeTemplate('main.php', [
     'categories' => $categories,
     'lots' => $lots,
 ]);
 
-$layoutContent = include_template('layout.php', [
+$layoutContent = includeTemplate('layout.php', [
     'content' => $pageContent,
     'title' => "Yeti Cave - Главная",
     'isAuth' => $isAuth,
