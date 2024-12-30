@@ -38,11 +38,11 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Начальная цена</span>
-                            <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["price"])) ?></span>
+                            <span class="lot__cost"><?= htmlspecialchars(formatPrice($lot["start_price"])) ?></span>
                         </div>
                         <?php
-                        $hours = calculatesRemainingTime($lot["finish_date"])[0];
-                        $minutes = calculatesRemainingTime($lot["finish_date"])[1];
+                        $hours = calculatesRemainingTime($lot["ended_at"])[0];
+                        $minutes = calculatesRemainingTime($lot["ended_at"])[1];
 
                         $class = ($hours < 1) ? "timer--finishing" : '';
                         ?>
