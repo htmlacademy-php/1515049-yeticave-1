@@ -1,12 +1,16 @@
 <?php
 
-require_once 'helpers.php';
-require_once 'functions.php';
-require_once 'data.php';
-/** @var array $categories */
-/** @var array $lots */
-/** @var  $isAuth */
-/** @var  $userName */
+require_once 'init.php';
+
+$config = require 'config.php';
+
+$dbConnection = dbConnect($config);
+$lots = getLotsFromDb($dbConnection);
+$categories = getCategoriesFromDb($dbConnection);
+mysqli_close($dbConnection);
+
+$isAuth = rand(0, 1);
+$userName = 'Наталья';
 
 $pageContent = includeTemplate('main.php', [
     'categories' => $categories,

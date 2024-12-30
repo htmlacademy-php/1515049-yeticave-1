@@ -71,7 +71,7 @@
             <?php
             foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="../pages/all-lots.html"><?= htmlspecialchars($category, null, 'UTF-8') ?></a>
+                    <a href="../pages/all-lots.html"><?= htmlspecialchars($category["name"], null, 'UTF-8') ?></a>
                 </li>
             <?php
             endforeach; ?>
