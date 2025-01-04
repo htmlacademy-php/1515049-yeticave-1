@@ -24,7 +24,6 @@ function dbConnect(array $config):mysqli|bool
     return $con;
 }
 
-// получение лотов
 /**
  * Получение массива самых новых актуальных лотов из базы данных
  * @param mysqli $con
@@ -45,25 +44,66 @@ ORDER BY l.created_at DESC;";
 
     if (!$result) {
         $error = mysqli_error($con);
-        print("SQL Error: $error");
+        error_log("SQL Error: $error");
+        return [];
     }
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-
-//  получение категорий
-function getCategoriesFromDb(mysqli $con)
+/**
+ * Получение списка категорий
+ * @param mysqli $con
+ * @return array
+ */
+function getCategoriesFromDb(mysqli $con): array
 {
     $sql = "SELECT * FROM categories;";
     $result = mysqli_query($con, $sql);
 
     if (!$result) {
         $error = mysqli_error($con);
-        print("SQL Error: $error");
+        error_log("SQL Error: $error");
+        return [];
     }
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Получение лота по id
+ * @param mysqli $con
+ * @param int $id
+ * @return array
+ */
+function getLotById(mysqli $con, int $id)
+{
+    if ($id < 0 || $id == null || $id == '') {
+        $error = mysqli_error($con);
+        error_log("SQL Error: $error");
+        return [];
+    }
+
+    $sql = "SELECT
+            l.*,
+            c.name AS category,
+            r.amount AS last_rate,
+            l.rate_step
+        FROM lots l
+        JOIN categories c ON l.category_id = c.id
+        LEFT JOIN rates r ON l.id = r.lot_id
+        WHERE l.id = $id
+        ORDER BY r.created_at DESC
+        LIMIT 1;";
+    $result = mysqli_query($con, $sql);
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        error_log("SQL Error: $error");
+        return [];
+    }
+
+    return mysqli_fetch_assoc($result);
 }
 
 /**
