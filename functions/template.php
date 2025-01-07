@@ -58,3 +58,14 @@ function includeTemplate(string $name, array $data = []): string
 
     return $result;
 }
+
+/**
+ * Показывает страницу с ошибками
+ * @param $content
+ * @param $error
+ * @return void
+ */
+function showError(&$content, $error)
+{
+    $content = includeTemplate('error.php', ['error' => $error]);
+}

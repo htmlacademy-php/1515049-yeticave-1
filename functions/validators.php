@@ -1,4 +1,57 @@
 <?php
+
+/**
+ * Проверка на положительное число
+ * @param void $value
+ * @return string|null
+ */
+function validatePositiveFloat ($value): ?string
+{
+    if (!is_numeric($value)) {
+        return "Значение должно быть числом.";
+    }
+
+    if ($value <= 0) {
+        return "Число должно быть больше нуля.";
+    }
+
+    return null;
+}
+
+/**
+ * Проверка на целое положительное число
+ * @param int $value
+ * @return string|null
+ */
+function validatePositiveInt (int $value): ?string {
+    if (!is_numeric($value) || $value <= 0) {
+        return "Шаг ставки должен быть целым числом больше 0.";
+    }
+
+    return null;
+}
+
+/**
+ * Валидация даты
+ * @param string $value
+ * @return string|null
+ */
+function validateDate (string $value): ?string
+{
+    if (!isDateValid($value)) {
+        return "Введите дату в формате 'ГГГГ-ММ-ДД'";
+    }
+
+    $dateNow = date("Y-m-d");
+    $timeDiff = strtotime($value) - strtotime($dateNow);
+
+    if ($timeDiff < 24*60*60) {
+        return "Укажите дату минимум через 24 часа";
+    }
+
+    return null;
+}
+
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
  *

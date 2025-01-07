@@ -72,9 +72,11 @@ function getCategoriesFromDb(mysqli $con): array
 
 /**
  * Получение лота по id
+ *
  * @param mysqli $con
  * @param int $id
- * @return array
+ *
+ * @return array|false|null
  */
 function getLotById(mysqli $con, int $id)
 {
@@ -95,6 +97,7 @@ function getLotById(mysqli $con, int $id)
         WHERE l.id = $id
         ORDER BY r.created_at DESC
         LIMIT 1;";
+
     $result = mysqli_query($con, $sql);
 
     if (!$result) {

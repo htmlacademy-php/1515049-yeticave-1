@@ -1,15 +1,14 @@
 <?php
 /** @var  $title */
-
 /** @var array $categories */
 /** @var array $lots */
 /** @var  $isAuth */
 /** @var  $userName */
 /** @var  $content */
 
+$isLotPage = TRUE;
 
-$lotId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$isLotPage = $lotId !== null;
+$isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +18,7 @@ $isLotPage = $lotId !== null;
     <title><?= $title ?></title>
     <link href="css/normalize.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 <body>
 <div class="page-wrapper">
@@ -33,7 +33,7 @@ $isLotPage = $lotId !== null;
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <a class="main-header__add-lot button" href="../pages/add-lot.html">Добавить лот</a>
+            <a class="main-header__add-lot button" href="../add.php">Добавить лот</a>
 
             <nav class="user-menu">
 
@@ -64,7 +64,7 @@ $isLotPage = $lotId !== null;
     </header>
 
     <?php
-    if ($isLotPage): ?>
+    if (!$isHomePage): ?>
         <nav class="nav">
             <ul class="nav__list container">
                 <?php
@@ -82,7 +82,7 @@ $isLotPage = $lotId !== null;
 
     <main class="container">
         <?php
-        if (!$isLotPage): ?>
+        if ($isHomePage): ?>
             <section class="promo">
                 <h2 class="promo__title">Нужен стафф для катки?</h2>
                 <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и
