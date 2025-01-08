@@ -3,7 +3,6 @@
 /** @var array $errors */
 /** @var array $lot */
 $classnameForm = (isset($errors)) ? "form--invalid" : "";
-var_dump($classnameForm);
 ?>
 
 <form class="form form--add-lot container <?= $classnameForm; ?>" action="../add.php" method="post" enctype="multipart/form-data">
@@ -48,7 +47,7 @@ var_dump($classnameForm);
         <span class="form__error"><?= $errors['message']; ?></span>
         <?php endif; ?>
     </div>
-    <?php $classname = isset($errors['lot-img']) ? "form__item--invalid" : ""; ?>
+    <?php $classname = isset($errors['file']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--file <?= $classname; ?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
@@ -57,7 +56,7 @@ var_dump($classnameForm);
                 Добавить
             </label>
             <?php if ($classname): ?>
-                <span class="form__error"><?= $errors['lot-img']; ?></span>
+                <span class="form__error"><?= $errors['file']; ?></span>
             <?php endif; ?>
         </div>
     </div>

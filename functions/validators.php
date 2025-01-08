@@ -75,6 +75,49 @@ function isDateValid(string $date): bool
 }
 
 /**
+ * Валидация формы
+ * @param array $postData данные полученные из формы
+ * @param array $rules правила валидации для полей формы
+ * @param array $errorMessages сообщения об ошибке для каждого поля
+ * @param mysqli $dbConnection ресурс соединения
+ * @return array Массив с ошибками
+ */
+function validateForm(array $postData, array $rules, array $errorMessages, mysqli $dbConnection): array
+{
+    $required = ['lot-name', 'category', 'message', 'lot-img', 'lot-rate', 'lot-step', 'lot-date'];
+    $errors = [];
+
+    foreach ($required as $field) {
+        if (empty($postData[$field]) && $field !== 'lot-img') {
+            $errors[$field] = $errorMessages[$field];
+        }
+    }
+
+    foreach ($rules as $field => $rule) {
+        if (!empty($postData[$field]) && $rule($postData[$field])) {
+            $errors[$field] = $rule($postData[$field]);
+        }
+    }
+
+    if (empty($postData['category']) || $postData['category'] === 'Выберите категорию') {
+        $errors['category'] = "Выберите категорию из списка";
+    } else {
+        $categoryId = (int)$_POST['category'];
+
+        $categoryExistsQuery = "SELECT id FROM categories WHERE id = ?";
+        $stmt = dbGetPrepareStmt($dbConnection, $categoryExistsQuery, [$categoryId]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($result) === 0) {
+            $errors['category'] = "Выбранная категория не существует";
+        }
+    }
+
+    return $errors;
+}
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *

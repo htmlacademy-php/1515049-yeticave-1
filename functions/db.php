@@ -71,6 +71,37 @@ function getCategoriesFromDb(mysqli $con): array
 }
 
 /**
+ * Добавление нового лота в базу данных
+ *
+ * @param array $lotData Отвалидированные данные из формы
+ * @param mysqli $con ресурс соединения
+ * @return array массив успех|id нового лота|ошибка
+ */
+function addLotToDb(array $lotData, mysqli $con): array
+{
+    $response = [
+        'success' => false,
+        'lotId' => null,
+        'error' => null
+    ];
+
+    $sql = 'INSERT INTO lots (created_at, title, category_id, description, image_url, start_price, rate_step, author_id, ended_at)
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
+
+    $stmt = dbGetPrepareStmt($con, $sql, $lotData);
+
+    if (!mysqli_stmt_execute($stmt)) {
+        $response['error'] = "Ошибка выполнения запроса: " . mysqli_error($con);
+        return $response;
+    }
+
+    $response['success'] = true;
+    $response['lotId'] = mysqli_insert_id($con);
+
+    return $response;
+}
+
+/**
  * Получение лота по id
  *
  * @param mysqli $con
@@ -78,7 +109,7 @@ function getCategoriesFromDb(mysqli $con): array
  *
  * @return array|false|null
  */
-function getLotById(mysqli $con, int $id)
+function getLotById(mysqli $con, int $id): array|false|null
 {
     if ($id < 0 || $id == null || $id == '') {
         $error = mysqli_error($con);
