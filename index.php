@@ -7,7 +7,6 @@ $config = require 'config.php';
 $dbConnection = dbConnect($config);
 $lots = getLotsFromDb($dbConnection);
 $categories = getCategoriesFromDb($dbConnection);
-mysqli_close($dbConnection);
 
 $isAuth = rand(0, 1);
 $userName = 'Наталья';

@@ -5,7 +5,7 @@
  * @param array $config Настройки подключения
  * @return mysqli|bool Ресурс соединения
  */
-function dbConnect(array $config):mysqli|bool
+function dbConnect(array $config): mysqli|bool
 {
     if (!isset($config['db']['host'], $config['db']['user'], $config['db']['password'], $config['db']['database'])) {
         exit("Database configuration is incomplete.");
@@ -13,7 +13,7 @@ function dbConnect(array $config):mysqli|bool
 
     $dbConfig = $config['db'];
 
-    $con = mysqli_connect($dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['database']);
+    $con = mysqli_connect($dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['database'], $dbConfig['port']);
 
     if (!$con) {
         exit("Connection error: " . mysqli_connect_error());
@@ -29,16 +29,16 @@ function dbConnect(array $config):mysqli|bool
  * @param mysqli $con
  * @return array
  */
-function getLotsFromDb(mysqli $con)
+function getLotsFromDb(mysqli $con): array
 {
-    $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.ended_at, c.name AS category,
-       COALESCE(MAX(r.amount), l.start_price) AS current_price
-FROM lots l
-       JOIN categories c ON c.id = l.category_id
-       LEFT JOIN rates r ON r.lot_id = l.id
-WHERE l.ended_at > NOW()
-GROUP BY l.id, l.title, l.start_price, l.image_url, c.name
-ORDER BY l.created_at DESC;";
+    $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, c.name AS category,
+                   COALESCE(MAX(r.amount), l.start_price) AS current_price
+            FROM lots l
+                   JOIN categories c ON c.id = l.category_id
+                   LEFT JOIN rates r ON r.lot_id = l.id
+            WHERE l.ended_at > NOW()
+            GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.ended_at, l.created_at
+            ORDER BY l.ended_at, l.created_at DESC;";
 
     $result = mysqli_query($con, $sql);
 
@@ -50,6 +50,7 @@ ORDER BY l.created_at DESC;";
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
 
 /**
  * Получение списка категорий
@@ -117,17 +118,16 @@ function getLotById(mysqli $con, int $id): array|false|null
         return [];
     }
 
-    $sql = "SELECT
-            l.*,
-            c.name AS category,
-            r.amount AS last_rate,
-            l.rate_step
-        FROM lots l
-        JOIN categories c ON l.category_id = c.id
-        LEFT JOIN rates r ON l.id = r.lot_id
-        WHERE l.id = $id
-        ORDER BY r.created_at DESC
-        LIMIT 1;";
+    $sql = "SELECT  l.*,
+                    c.name AS category,
+                    r.amount AS last_rate,
+                    l.rate_step
+            FROM lots l
+            JOIN categories c ON l.category_id = c.id
+            LEFT JOIN rates r ON l.id = r.lot_id
+            WHERE l.id = $id
+            ORDER BY r.created_at DESC
+            LIMIT 1;";
 
     $result = mysqli_query($con, $sql);
 

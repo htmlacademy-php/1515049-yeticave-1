@@ -41,7 +41,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 <?php
                 if ($isAuth === 1): ?>
                     <div class="user-menu__logged">
-                        <p><?= htmlspecialchars($userName, null, 'UTF-8'); ?></p>
+                        <p><?= htmlspecialchars($userName); ?></p>
                         <a class="user-menu__bets" href="../pages/my-bets.html">Мои ставки</a>
                         <a class="user-menu__logout" href="#">Выход</a>
                     </div>
@@ -116,7 +116,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <?php
             foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="../pages/all-lots.html"><?= htmlspecialchars($category["name"], null, 'UTF-8') ?></a>
+                    <a href="../pages/all-lots.html"><?= htmlspecialchars($category["name"]); ?></a>
                 </li>
             <?php
             endforeach; ?>

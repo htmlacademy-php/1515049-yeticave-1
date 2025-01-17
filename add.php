@@ -70,7 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (count($errors) > 0) {
-        $pageContent = includeTemplate('add.php', ['lot' => $_POST, 'categories' => $categories, 'errors' => $errors]);
+        $pageContent = includeTemplate('add.php', [
+            'lot' => $_POST,
+            'categories' => $categories,
+            'errors' => $errors]);
     } else {
         $newLotData = $_POST;
     }
