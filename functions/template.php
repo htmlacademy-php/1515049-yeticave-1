@@ -58,3 +58,26 @@ function includeTemplate(string $name, array $data = []): string
 
     return $result;
 }
+
+/**
+ * Получение ID лота из параметров запроса и валидация
+ *
+ * @param mysqli $dbConnection Соединение с базой данных
+ * @return int $lotId Идентификатор лота
+ */
+function getLotIdFromQueryParams(mysqli $dbConnection): int
+{
+    $lotId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+    if ($lotId === null || $lotId === false || $lotId === '') {
+        header("Location: /404.php");
+        exit();
+    }
+    $lot = getLotById($dbConnection, $lotId);
+
+    if (!$lot) {
+        header("Location: /404.php");
+        exit();
+    }
+    return $lotId;
+}
