@@ -60,12 +60,24 @@ function includeTemplate(string $name, array $data = []): string
 }
 
 /**
- * Показывает страницу с ошибками
- * @param $content
- * @param $error
- * @return void
+ * Получение ID лота из параметров запроса и валидация
+ *
+ * @param mysqli $dbConnection Соединение с базой данных
+ * @return int $lotId Идентификатор лота
  */
-function showError(&$content, $error)
+function getLotIdFromQueryParams(mysqli $dbConnection): int
 {
-    $content = includeTemplate('error.php', ['error' => $error]);
+    $lotId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+    if ($lotId === null || $lotId === false || $lotId === '') {
+        header("Location: /404.php");
+        exit();
+    }
+    $lot = getLotById($dbConnection, $lotId);
+
+    if (!$lot) {
+        header("Location: /404.php");
+        exit();
+    }
+    return $lotId;
 }

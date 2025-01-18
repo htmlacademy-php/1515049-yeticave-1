@@ -29,7 +29,7 @@ function dbConnect(array $config): mysqli|bool
  * @param mysqli $con
  * @return array
  */
-function getLotsFromDb(mysqli $con): array
+function getLots(mysqli $con): array
 {
     $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, c.name AS category,
                    COALESCE(MAX(r.amount), l.start_price) AS current_price
@@ -57,7 +57,7 @@ function getLotsFromDb(mysqli $con): array
  * @param mysqli $con
  * @return array
  */
-function getCategoriesFromDb(mysqli $con): array
+function getCategories(mysqli $con): array
 {
     $sql = "SELECT * FROM categories;";
     $result = mysqli_query($con, $sql);

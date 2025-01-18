@@ -2,14 +2,15 @@
 
 require_once 'init.php';
 
-$config = require 'config.php';
+/** @var int $isAuth */
+/** @var string $userName */
+/** @var mysqli $dbConnection */
 
-$dbConnection = dbConnect($config);
-$lots = getLotsFromDb($dbConnection);
-$categories = getCategoriesFromDb($dbConnection);
 
-$isAuth = rand(0, 1);
-$userName = 'Наталья';
+$lots = getLots($dbConnection);
+$categories = getCategories($dbConnection);
+
+
 
 $pageContent = includeTemplate('main.php', [
     'categories' => $categories,
