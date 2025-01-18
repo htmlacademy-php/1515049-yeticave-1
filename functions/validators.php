@@ -1,8 +1,22 @@
 <?php
 
 /**
+ * Валидация длины имени лота
+ *
+ * @param string $name
+ * @return string|null
+ */
+function validateLotName(string $name): ?string
+{
+    if (mb_strlen($name) > 255) {
+        return "Длина имени лота не должна превышать 255 символов.";
+    }
+    return null;
+}
+
+/**
  * Проверка на положительное число
- * @param void $value
+ * @param mixed $value
  * @return string|null
  */
 function validatePositiveFloat ($value): ?string
@@ -20,10 +34,10 @@ function validatePositiveFloat ($value): ?string
 
 /**
  * Проверка на целое положительное число
- * @param int $value
+ * @param mixed $value
  * @return string|null
  */
-function validatePositiveInt (int $value): ?string {
+function validatePositiveInt ($value): ?string {
     if (!is_numeric($value) || $value <= 0) {
         return "Шаг ставки должен быть целым числом больше 0.";
     }
@@ -71,19 +85,43 @@ function isDateValid(string $date): bool
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
-    return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
+    return $dateTimeObj !== false && date_get_last_errors()['warning_count'] === 0 && date_get_last_errors()['error_count'] === 0;
 }
 
 /**
- * Валидация формы
+ * Валидация формы добавления лота
+ *
  * @param array $postData данные полученные из формы
- * @param array $rules правила валидации для полей формы
- * @param array $errorMessages сообщения об ошибке для каждого поля
  * @param mysqli $dbConnection ресурс соединения
  * @return array Массив с ошибками
  */
-function validateForm(array $postData, array $rules, array $errorMessages, mysqli $dbConnection): array
+function validateAddLotForm(array $postData, mysqli $dbConnection): array
 {
+    $errorMessages = [
+        'lot-name' => 'Введите наименование лота',
+        'category' => 'Выберите категорию',
+        'message' => 'Напишите описание лота',
+        'lot-img' => 'Загрузите изображение',
+        'lot-rate' => 'Введите начальную цену',
+        'lot-step' => 'Введите шаг ставки',
+        'lot-date' => 'Введите дату завершения торгов'
+    ];
+
+    $rules = [
+        'lot-name' => function ($value) {
+            return validateLotName($value);
+        },
+        'lot-rate' => function ($value) {
+            return validatePositiveFloat($value);
+        },
+        'lot-step' => function ($value) {
+            return validatePositiveInt($value);
+        },
+        'lot-date' => function ($value) {
+            return validateDate($value);
+        }
+    ];
+
     $required = ['lot-name', 'category', 'message', 'lot-img', 'lot-rate', 'lot-step', 'lot-date'];
     $errors = [];
 

@@ -1,7 +1,7 @@
 <?php
 /** @var array $categories */
 /** @var array $errors */
-/** @var array $lot */
+/** @var array $lotData */
 $classnameForm = (isset($errors)) ? "form--invalid" : "";
 ?>
 
@@ -13,7 +13,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         $classname = isset($errors['lot-name']) ? "form__item--invalid" : ""; ?>
         <div class="form__item <?= $classname; ?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
-            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= htmlspecialchars($lot['lot-name'] ?? ''); ?>">
+            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= htmlspecialchars($lotData['lot-name'] ?? ''); ?>">
             <?php
             if ($classname): ?>
                 <span class="form__error"><?= $errors['lot-name']; ?></span>
@@ -28,7 +28,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
                 <?php
                 foreach ($categories as $category): ?>
                     <option value="<?= htmlspecialchars($category['id']); ?>"
-                        <?= isset($lot['category']) && $lot['category'] == $category['id'] ? 'selected' : ''; ?>>
+                        <?= isset($lotData['category']) && $lotData['category'] == $category['id'] ? 'selected' : ''; ?>>
                         <?= htmlspecialchars($category['name']); ?>
                     </option>
                 <?php
@@ -42,7 +42,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
     <?php $classname = isset($errors['message']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--wide <?= $classname; ?>">
         <label for="message">Описание <sup>*</sup></label>
-        <textarea id="message" name="message" placeholder="Напишите описание лота"><?= htmlspecialchars($lot['message'] ?? ''); ?></textarea>
+        <textarea id="message" name="message" placeholder="Напишите описание лота"><?= htmlspecialchars($lotData['message'] ?? ''); ?></textarea>
         <?php if ($classname): ?>
         <span class="form__error"><?= $errors['message']; ?></span>
         <?php endif; ?>
@@ -64,7 +64,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-rate']) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
             <label for="lot-rate">Начальная цена <sup>*</sup></label>
-            <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= htmlspecialchars($lot['lot-rate'] ?? ''); ?>">
+            <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= htmlspecialchars($lotData['lot-rate'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-rate']; ?></span>
             <?php endif; ?>
@@ -72,7 +72,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-step']) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= htmlspecialchars($lot['lot-step'] ?? ''); ?>">
+            <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= htmlspecialchars($lotData['lot-step'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-step']; ?></span>
             <?php endif; ?>
@@ -80,7 +80,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-date']) ? "form__item--invalid" : ""; ?>
         <div class="form__item <?= $classname; ?>">
             <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
-            <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= htmlspecialchars($lot['lot-date'] ?? ''); ?>">
+            <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= htmlspecialchars($lotData['lot-date'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-date']; ?></span>
             <?php endif; ?>
