@@ -1,6 +1,49 @@
 <?php
 
 /**
+ * Валидация данных формы регистрации
+ *
+ * @param array $formData Данные формы
+ * @return array Массив с ошибками
+ */
+function validateSignUpForm(array $formData): array
+{
+    $errors = [];
+
+    if (empty($formData['email']) || !filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Введите корректный e-mail';
+    }
+    if (empty($formData['password'])) {
+        $errors['password'] = 'Введите пароль';
+    }
+    if (empty($formData['name'])) {
+        $errors['name'] = 'Введите имя';
+    }
+    if (empty($formData['message'])) {
+        $errors['message'] = 'Напишите как с вами связаться';
+    }
+
+    return $errors;
+}
+
+/**
+ * Проверка уникальности e-mail
+ *
+ * @param string $email Адрес электронной почты
+ * @param mysqli $dbConnection Объект подключения к базе данных
+ * @return bool true, если e-mail уникален, иначе false
+ */
+function isEmailUnique(string $email, mysqli $dbConnection): bool
+{
+    $query = "SELECT id FROM users WHERE email = ?";
+    $stmt = dbGetPrepareStmt($dbConnection, $query, [$email]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_num_rows($result) === 0;
+}
+
+/**
  * Валидация длины имени лота
  *
  * @param string $name
@@ -85,7 +128,7 @@ function isDateValid(string $date): bool
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
-    return $dateTimeObj !== false && date_get_last_errors()['warning_count'] === 0 && date_get_last_errors()['error_count'] === 0;
+    return $dateTimeObj !== false;
 }
 
 /**
