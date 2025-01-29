@@ -141,6 +141,27 @@ function getLotById(mysqli $con, int $id): array|false|null
 }
 
 /**
+ * Добавление нового пользователя в базу данных
+ *
+ * @param array $formData Данные формы
+ * @param mysqli $dbConnection Объект подключения к базе данных
+ * @return bool true, если пользователь успешно добавлен, иначе false
+ */
+function addUserToDatabase(array $formData, mysqli $dbConnection): bool
+{
+    $passwordHash = password_hash($formData['password'], PASSWORD_DEFAULT);
+    $sql = "INSERT INTO users (email, name, password, contacts) VALUES (?, ?, ?, ?)";
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [
+        $formData['email'],
+        $formData['name'],
+        $passwordHash,
+        $formData['message']
+    ]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
  * @param $link mysqli Ресурс соединения
