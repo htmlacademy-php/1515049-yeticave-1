@@ -20,7 +20,7 @@ function validateSignUpForm(array $formData): array
         $errors['name'] = 'Введите имя';
     }
     if (empty($formData['message'])) {
-        $errors['message'] = 'Напишите как с вами связаться';
+        $errors['contacts'] = 'Напишите как с вами связаться';
     }
 
     return $errors;
