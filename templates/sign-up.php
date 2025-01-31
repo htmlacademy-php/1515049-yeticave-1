@@ -17,7 +17,7 @@
     </div>
     <div class="form__item<?= isset($errors['contacts']) ? ' form__item--invalid' : '' ?>">
         <label for="contacts">Контактные данные <sup>*</sup></label>
-        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= htmlspecialchars($formData['message'] ?? '') ?></textarea>
+        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= htmlspecialchars($formData['contacts'] ?? '') ?></textarea>
         <span class="form__error"><?= $errors['contacts'] ?? 'Напишите как с вами связаться' ?></span>
     </div>
     <?php if (!empty($errors)): ?>

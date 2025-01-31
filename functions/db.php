@@ -155,7 +155,7 @@ function addUserToDatabase(array $formData, mysqli $dbConnection): bool
         $formData['email'],
         $formData['name'],
         $passwordHash,
-        $formData['message']
+        $formData['contacts']
     ]);
 
     return mysqli_stmt_execute($stmt);

@@ -28,7 +28,7 @@ function validateSignUpForm(array $formData): array
     if (empty($formData['name'])) {
         $errors['name'] = 'Введите имя';
     }
-    if (empty($formData['message'])) {
+    if (empty($formData['contacts'])) {
         $errors['contacts'] = 'Напишите как с вами связаться';
     }
 
@@ -152,7 +152,7 @@ function validateAddLotForm(array $postData, mysqli $dbConnection): array
     $errorMessages = [
         'lot-name' => 'Введите наименование лота',
         'category' => 'Выберите категорию',
-        'message' => 'Напишите описание лота',
+        'contacts' => 'Напишите описание лота',
         'lot-img' => 'Загрузите изображение',
         'lot-rate' => 'Введите начальную цену',
         'lot-step' => 'Введите шаг ставки',
