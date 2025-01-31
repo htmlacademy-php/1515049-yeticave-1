@@ -2,8 +2,8 @@
 /** @var  $title */
 /** @var array $categories */
 /** @var array $lots */
-/** @var  $isAuth */
-/** @var  $userName */
+/** @var  int $isAuth */
+/** @var  string $userName */
 /** @var  $content */
 
 $isLotPage = TRUE;
@@ -33,7 +33,9 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
+            <?php if($isAuth === 1): ?>
             <a class="main-header__add-lot button" href="../add.php">Добавить лот</a>
+            <?php endif; ?>
 
             <nav class="user-menu">
 
@@ -43,7 +45,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                     <div class="user-menu__logged">
                         <p><?= htmlspecialchars($userName); ?></p>
                         <a class="user-menu__bets" href="../pages/my-bets.html">Мои ставки</a>
-                        <a class="user-menu__logout" href="#">Выход</a>
+                        <a class="user-menu__logout" href="../logout.php">Выход</a>
                     </div>
                 <?php
                 else: ?>
@@ -52,7 +54,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                             <a href="/sign-up.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="#">Вход</a>
+                            <a href="../login.php">Вход</a>
                         </li>
                     </ul>
 
@@ -165,7 +167,9 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 </svg>
             </a>
         </div>
+        <?php if($isAuth === 1): ?>
         <a class="main-footer__add-lot button" href="/add.php">Добавить лот</a>
+        <?php endif; ?>
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
             <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">

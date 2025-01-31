@@ -87,7 +87,7 @@ function addLotToDb(array $lotData, mysqli $con): array
     ];
 
     $sql = 'INSERT INTO lots (created_at, title, category_id, description, image_url, start_price, rate_step, author_id, ended_at)
-            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)';
 
     $stmt = dbGetPrepareStmt($con, $sql, $lotData);
 

@@ -1,6 +1,8 @@
 <?php
 /** @var array $categories */
 /** @var array|null $lot Данные лота */
+/** @var int $isAuth */
+
 $remainingTime = calculatesRemainingTime($lot["ended_at"]);
 $hours = $remainingTime[0];
 $minutes = $remainingTime[1];
@@ -26,6 +28,7 @@ if ($lot['last_rate'] !== null) {
             <p class="lot-item__description"><?= htmlspecialchars($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
+            <?php if($isAuth === 1): ?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer <?= $class ?>">
                     <?=$hours ?>:<?=$minutes ?>
@@ -47,6 +50,7 @@ if ($lot['last_rate'] !== null) {
                     <button type="submit" class="button"> Сделать ставку</button>
                 </form>
             </div>
+            <?php endif; ?>
             <div class="history">
                 <h3> История ставок(<span>10 </span>)</h3>
                 <table class="history__list">
@@ -103,5 +107,6 @@ if ($lot['last_rate'] !== null) {
                 </table>
             </div>
         </div>
+
     </div>
 </section>

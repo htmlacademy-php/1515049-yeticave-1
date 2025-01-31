@@ -2,9 +2,9 @@
 
 require_once 'init.php';
 
+/** @var mysqli $dbConnection */
 /** @var int $isAuth */
 /** @var string $userName */
-/** @var mysqli $dbConnection */
 
 
 $lots = getLots($dbConnection);

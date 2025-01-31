@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Проверяет, авторизован ли пользователь.
+ *
+ * @return int 1, если пользователь авторизован, 0 — если нет.
+ */
+function isUserAuthenticated(): int {
+    return isset($_SESSION['user']) ? 1 : 0;
+}
+
+/**
  * Валидация данных формы регистрации
  *
  * @param array $formData Данные формы
