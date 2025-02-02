@@ -41,7 +41,7 @@ FROM lots l
        JOIN categories c ON c.id = l.category_id
        LEFT JOIN rates r ON r.lot_id = l.id
 WHERE l.ended_at > NOW()
-GROUP BY l.id, l.title, l.start_price, l.image_url, c.name
+GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.created_at
 ORDER BY l.created_at DESC;
 
 # показываем лот по его ID, получаем название категории, к которой принадлежит лот

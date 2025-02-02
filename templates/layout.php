@@ -72,7 +72,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 <?php
                 foreach ($categories as $category): ?>
                     <li class="nav__item">
-                        <a href="../pages/all-lots.html"><?= htmlspecialchars($category["name"]) ?></a>
+                        <a href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]) ?></a>
                     </li>
                 <?php
                 endforeach; ?>
@@ -94,7 +94,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                     <?php
                     foreach ($categories as $category): ?>
                         <li class="promo__item promo__item--<?= htmlspecialchars($category["symbol_code"]) ?>">
-                            <a class="promo__link" href="../pages/all-lots.html"><?= htmlspecialchars($category["name"]) ?></a>
+                            <a class="promo__link" href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]) ?></a>
                         </li>
                     <?php
                     endforeach; ?>
@@ -118,7 +118,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <?php
             foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="../pages/all-lots.html"><?= htmlspecialchars($category["name"]); ?></a>
+                    <a href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]); ?></a>
                 </li>
             <?php
             endforeach; ?>

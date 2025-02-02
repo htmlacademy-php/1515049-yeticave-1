@@ -6,11 +6,9 @@ require_once 'init.php';
 /** @var int $isAuth */
 /** @var string $userName */
 
-
-$lots = getLots($dbConnection);
 $categories = getCategories($dbConnection);
-
-
+$categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
+$lots = getLots($dbConnection, $categoryId);
 
 $pageContent = includeTemplate('main.php', [
     'categories' => $categories,
