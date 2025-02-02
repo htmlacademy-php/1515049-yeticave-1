@@ -9,42 +9,29 @@ require_once("init.php");
 $categories = getCategories($dbConnection);
 $content = includeTemplate('login.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $form = $_POST;
 
     $required = ['email', 'password'];
-    $errors = [];
+    $errors = validateLoginForm($form, $dbConnection);
 
-    foreach ($required as $field) {
-        if (empty(trim($form[$field]))) {
-            $errors[$field] = 'Это поле должно быть заполнено';
+    if (empty($errors)) {
+        $authResult = authenticateUser($form['email'], $form['password'], $dbConnection);
+
+        if (isset($authResult['success']) && $authResult['success'] === true) {
+            $_SESSION['user'] = $authResult['user'];
+            header('Location: /');
+            exit();
         }
+
+        $errors = $authResult['errors'] ?? [];
     }
 
     if (!empty($errors)) {
-        $content = includeTemplate('login.php', ['form' => $form, 'errors' => $errors]);
-    } else {
-        $email = mysqli_real_escape_string($dbConnection, $form['email']);
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $result = mysqli_query($dbConnection, $sql);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-
-            if (password_verify($form['password'], $user['password'])) {
-                $_SESSION['user'] = $user;
-                header('Location: /');
-                exit();
-            } else {
-                $errors['password'] = 'Неверный пароль';
-            }
-        } else {
-            $errors['email'] = 'Пользователь с этим email не найден';
-        }
-
-        if (!empty($errors)) {
-            $content = includeTemplate('login.php', ['form' => $form, 'errors' => $errors]);
-        }
+        $content = includeTemplate('login.php', [
+            'form' => $form,
+            'errors' => $errors
+        ]);
     }
 } else {
     if (isset($_SESSION['user'])) {

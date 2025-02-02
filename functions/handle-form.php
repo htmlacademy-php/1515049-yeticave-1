@@ -27,7 +27,7 @@ function handleAddLotForm(array $postData, array $fileData, mysqli $dbConnection
         $newLotData = [
             $postData['lot-name'],         // title
             (int)$postData['category'],    // category_id
-            $postData['message'],          // description
+            $postData['description'],          // description
             'uploads/' . $fileName,        // image_url
             (float)$postData['lot-rate'],  // start_price
             (int)$postData['lot-step'],    // rate_step

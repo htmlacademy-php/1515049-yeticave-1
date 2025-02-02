@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Ищет пользователя в базе данных по email.
+ *
+ * @param string $email Email пользователя для поиска.
+ * @param mysqli $db Объект подключения к базе данных.
+ *
+ * @return array|null Ассоциативный массив с данными пользователя, если он найден, иначе null.
+ */
+function findUserByEmail(string $email, mysqli $db): ?array
+{
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = dbGetPrepareStmt($db, $sql, [$email]);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    return mysqli_fetch_assoc($result) ?: null;
+}
+
+/**
  * Установка соединения с базой данных
  * @param array $config Настройки подключения
  * @return mysqli|bool Ресурс соединения

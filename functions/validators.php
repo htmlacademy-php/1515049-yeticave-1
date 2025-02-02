@@ -1,12 +1,73 @@
 <?php
 
 /**
- * Проверяет, авторизован ли пользователь.
+ * Аутентификация пользователя по email и паролю.
  *
+ * @param string $email Email пользователя, введённый для аутентификации.
+ * @param string $password Пароль пользователя, введённый для аутентификации.
+ * @param mysqli $db Объект подключения к базе данных.
+ *
+ * @return array Массив с результатом аутентификации:
+ *               - ['errors' => array] если произошли ошибки (например, пользователь не найден или пароль неверный).
+ *               - ['success' => true, 'user' => array] если аутентификация прошла успешно, где 'user' — массив с данными пользователя.
+ */
+function authenticateUser(string $email, string $password, mysqli $db): array {
+    $user = findUserByEmail($email, $db);
+
+    if (!$user) {
+        return ['errors' => ['email' => 'Пользователь с этим email не найден']];
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        return ['errors' => ['password' => 'Неверный пароль']];
+    }
+
+    return ['success' => true, 'user' => $user];
+}
+
+/** Валидирует форму авторизации.
+ * @param array $form Массив данных, полученных из формы авторизации.
+ *
+ * @return array массив с ошибками валидации
+ */
+function validateLoginForm(array $form): array {
+    $errors = [];
+    $required = ['email', 'password'];
+
+    foreach ($required as $field) {
+        if (empty(trim($form[$field] ?? ''))) {
+            $errors[$field] = 'Это поле должно быть заполнено';
+        }
+    }
+
+    return $errors;
+}
+
+
+/**
+ * Проверяет, авторизован ли пользователь.
+ * Если пользователь был удален из базы данных при использовании сайта, разлогинивает его
+ *
+ * @param mysqli $dbConnection ресурс соединения
  * @return int 1, если пользователь авторизован, 0 — если нет.
  */
-function isUserAuthenticated(): int {
-    return isset($_SESSION['user']) ? 1 : 0;
+function isUserAuthenticated(mysqli $dbConnection): int {
+    if (!isset($_SESSION['user'])) {
+        return 0;
+    }
+
+    $userId = $_SESSION['user']['id'];
+    $query = "SELECT id FROM users WHERE id = ?";
+    $stmt = dbGetPrepareStmt($dbConnection, $query, [$userId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (mysqli_num_rows($result) === 0) {
+        unset($_SESSION['user']);
+        return 0;
+    }
+
+    return 1;
 }
 
 /**
@@ -19,7 +80,11 @@ function validateSignUpForm(array $formData): array
 {
     $errors = [];
 
-    if (empty($formData['email']) || !filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
+    if (empty($formData['email'])) {
+        $errors['email'] = 'Введите e-mail';
+    } elseif (($emailLengthError = validateEmailLength($formData['email'])) !== null) {
+        $errors['email'] = $emailLengthError;
+    } elseif (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Введите корректный e-mail';
     }
     if (empty($formData['password'])) {
@@ -53,6 +118,20 @@ function isEmailUnique(string $email, mysqli $dbConnection): bool
 }
 
 /**
+ * Валидация длины email
+ *
+ * @param string $name
+ * @return string|null
+ */
+function validateEmailLength(string $name): ?string
+{
+    if (mb_strlen($name) > 255) {
+        return "Длина email не должна превышать 255 символов.";
+    }
+    return null;
+}
+
+/**
  * Валидация длины имени лота
  *
  * @param string $name
@@ -71,7 +150,7 @@ function validateLotName(string $name): ?string
  * @param mixed $value
  * @return string|null
  */
-function validatePositiveFloat ($value): ?string
+function validatePositiveFloat (mixed $value): ?string
 {
     if (!is_numeric($value)) {
         return "Значение должно быть числом.";
@@ -89,7 +168,7 @@ function validatePositiveFloat ($value): ?string
  * @param mixed $value
  * @return string|null
  */
-function validatePositiveInt ($value): ?string {
+function validatePositiveInt (mixed $value): ?string {
     if (!is_numeric($value) || $value <= 0) {
         return "Шаг ставки должен быть целым числом больше 0.";
     }
@@ -174,7 +253,7 @@ function validateAddLotForm(array $postData, mysqli $dbConnection): array
         }
     ];
 
-    $required = ['lot-name', 'category', 'message', 'lot-img', 'lot-rate', 'lot-step', 'lot-date'];
+    $required = ['lot-name', 'category', 'description', 'lot-img', 'lot-rate', 'lot-step', 'lot-date'];
     $errors = [];
 
     foreach ($required as $field) {

@@ -15,5 +15,5 @@ require_once 'functions/handle-form.php';
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
 
-$isAuth = isUserAuthenticated();
+$isAuth = isUserAuthenticated($dbConnection);
 $userName = $isAuth ? $_SESSION['user']['name'] : '';

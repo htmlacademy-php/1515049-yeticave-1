@@ -41,10 +41,10 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
     </div>
     <?php $classname = isset($errors['message']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--wide <?= $classname; ?>">
-        <label for="message">Описание <sup>*</sup></label>
-        <textarea id="message" name="message" placeholder="Напишите описание лота"><?= htmlspecialchars($lotData['message'] ?? ''); ?></textarea>
+        <label for="description">Описание <sup>*</sup></label>
+        <textarea id="description" name="description" placeholder="Напишите описание лота"><?= htmlspecialchars($lotData['message'] ?? ''); ?></textarea>
         <?php if ($classname): ?>
-        <span class="form__error"><?= $errors['message']; ?></span>
+        <span class="form__error"><?= $errors['description']; ?></span>
         <?php endif; ?>
     </div>
     <?php $classname = isset($errors['file']) ? "form__item--invalid" : ""; ?>
