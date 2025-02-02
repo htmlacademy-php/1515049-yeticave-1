@@ -2,15 +2,13 @@
 
 require_once 'init.php';
 
+/** @var mysqli $dbConnection */
 /** @var int $isAuth */
 /** @var string $userName */
-/** @var mysqli $dbConnection */
 
-
-$lots = getLots($dbConnection);
 $categories = getCategories($dbConnection);
-
-
+$categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
+$lots = getLots($dbConnection, $categoryId);
 
 $pageContent = includeTemplate('main.php', [
     'categories' => $categories,

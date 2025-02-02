@@ -12,6 +12,7 @@ $lotId = getLotIdFromQueryParams($dbConnection);
 $lot = getLotById($dbConnection, $lotId);
 
 $content = includeTemplate('lot.php', [
+    'isAuth' => $isAuth,
     'categories' => $categories,
     'lot' => $lot
 ]);

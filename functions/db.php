@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Ищет пользователя в базе данных по email.
+ *
+ * @param string $email Email пользователя для поиска.
+ * @param mysqli $db Объект подключения к базе данных.
+ *
+ * @return array|null Ассоциативный массив с данными пользователя, если он найден, иначе null.
+ */
+function findUserByEmail(string $email, mysqli $db): ?array
+{
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = dbGetPrepareStmt($db, $sql, [$email]);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    return mysqli_fetch_assoc($result) ?: null;
+}
+
+/**
  * Установка соединения с базой данных
  * @param array $config Настройки подключения
  * @return mysqli|bool Ресурс соединения
@@ -25,22 +43,44 @@ function dbConnect(array $config): mysqli|bool
 }
 
 /**
- * Получение массива самых новых актуальных лотов из базы данных
- * @param mysqli $con
- * @return array
+ * Функция выполняет SQL-запрос для выборки активных лотов. Если передан параметр $categoryId,
+ * то выполняется выборка только лотов из указанной категории. Для главной страницы
+ * (без фильтрации по категории) используется обычный `mysqli_query()`, а при фильтрации
+ * по категории — подготовленный запрос (`prepared statement`).
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int|null $categoryId Категории для фильтрации (по умолчанию null, если нужен полный список).
+ * @return array Массив с лотами
  */
-function getLots(mysqli $con): array
-{
-    $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, c.name AS category,
-                   COALESCE(MAX(r.amount), l.start_price) AS current_price
-            FROM lots l
-                   JOIN categories c ON c.id = l.category_id
-                   LEFT JOIN rates r ON r.lot_id = l.id
-            WHERE l.ended_at > NOW()
-            GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.ended_at, l.created_at
-            ORDER BY l.ended_at, l.created_at DESC;";
 
-    $result = mysqli_query($con, $sql);
+function getLots(mysqli $con, ?int $categoryId = null): array
+{
+    if ($categoryId === null) {
+        $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, c.id as category_id, c.name AS category,
+                    COALESCE(MAX(r.amount), l.start_price) AS current_price
+                FROM lots l
+                    JOIN categories c ON c.id = l.category_id
+                    LEFT JOIN rates r ON r.lot_id = l.id
+                WHERE l.ended_at > NOW()
+                GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.ended_at, l.created_at, l.category_id
+                ORDER BY l.ended_at, l.created_at DESC;";
+
+        $result = mysqli_query($con, $sql);
+    } else {
+        $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, c.id as category_id, c.name AS category,
+                    COALESCE(MAX(r.amount), l.start_price) AS current_price
+                FROM lots l
+                    JOIN categories c ON c.id = l.category_id
+                    LEFT JOIN rates r ON r.lot_id = l.id
+                WHERE l.ended_at > NOW() AND l.category_id = ?
+                GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.ended_at, l.created_at, l.category_id
+                ORDER BY l.ended_at, l.created_at DESC;";
+
+        $stmt = mysqli_prepare($con, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $categoryId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    }
 
     if (!$result) {
         $error = mysqli_error($con);
@@ -87,7 +127,7 @@ function addLotToDb(array $lotData, mysqli $con): array
     ];
 
     $sql = 'INSERT INTO lots (created_at, title, category_id, description, image_url, start_price, rate_step, author_id, ended_at)
-            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)';
 
     $stmt = dbGetPrepareStmt($con, $sql, $lotData);
 
@@ -155,7 +195,7 @@ function addUserToDatabase(array $formData, mysqli $dbConnection): bool
         $formData['email'],
         $formData['name'],
         $passwordHash,
-        $formData['message']
+        $formData['contacts']
     ]);
 
     return mysqli_stmt_execute($stmt);

@@ -15,10 +15,10 @@
         <input id="name" type="text" name="name" placeholder="Введите имя" value="<?= htmlspecialchars($formData['name'] ?? '') ?>">
         <span class="form__error"><?= $errors['name'] ?? 'Введите имя' ?></span>
     </div>
-    <div class="form__item<?= isset($errors['message']) ? ' form__item--invalid' : '' ?>">
-        <label for="message">Контактные данные <sup>*</sup></label>
-        <textarea id="message" name="message" placeholder="Напишите как с вами связаться"><?= htmlspecialchars($formData['message'] ?? '') ?></textarea>
-        <span class="form__error"><?= $errors['message'] ?? 'Напишите как с вами связаться' ?></span>
+    <div class="form__item<?= isset($errors['contacts']) ? ' form__item--invalid' : '' ?>">
+        <label for="contacts">Контактные данные <sup>*</sup></label>
+        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= htmlspecialchars($formData['contacts'] ?? '') ?></textarea>
+        <span class="form__error"><?= $errors['contacts'] ?? 'Напишите как с вами связаться' ?></span>
     </div>
     <?php if (!empty($errors)): ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>

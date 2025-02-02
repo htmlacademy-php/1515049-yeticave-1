@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -11,8 +12,8 @@ require_once 'functions/db.php';
 require_once 'functions/process-file-upload.php';
 require_once 'functions/handle-form.php';
 
-$isAuth = rand(0, 1);
-$userName = 'Наталья';
-
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
+
+$isAuth = isUserAuthenticated($dbConnection);
+$userName = $isAuth ? $_SESSION['user']['name'] : '';
