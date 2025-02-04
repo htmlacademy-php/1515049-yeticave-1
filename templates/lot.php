@@ -18,14 +18,14 @@ if ($lot['last_rate'] !== null) {
 ?>
 
 <section class="lot-item container">
-    <h2><?= htmlspecialchars($lot['title']); ?></h2>
+    <h2><?= sanitizeInput($lot['title']); ?></h2>
     <div class="lot-item__content">
         <div class="lot-item__left">
             <div class="lot-item__image">
-                <img src="<?= htmlspecialchars($lot['image_url']) ?>" width="730" height="548" alt="Сноуборд">
+                <img src="<?= sanitizeInput($lot['image_url']) ?>" width="730" height="548" alt="Сноуборд">
             </div>
             <p class="lot-item__category"> Категория: <span><?= $lot['category'] ?></span></p>
-            <p class="lot-item__description"><?= htmlspecialchars($lot['description'])?></p>
+            <p class="lot-item__description"><?= sanitizeInput($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
             <?php if($isAuth === 1): ?>
@@ -36,10 +36,10 @@ if ($lot['last_rate'] !== null) {
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount"> Текущая цена </span>
-                        <span class="lot-item__cost"><?= htmlspecialchars(formatPrice($currentPrice)) ?></span>
+                        <span class="lot-item__cost"><?= sanitizeInput(formatPrice($currentPrice)) ?></span>
                     </div>
                     <div class="lot-item__min-cost">
-                        Мин. ставка <span><?= htmlspecialchars(formatPrice($minBid)) ?></span>
+                        Мин. ставка <span><?= sanitizeInput(formatPrice($minBid)) ?></span>
                     </div>
                 </div>
                 <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">

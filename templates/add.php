@@ -13,7 +13,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         $classname = isset($errors['lot-name']) ? "form__item--invalid" : ""; ?>
         <div class="form__item <?= $classname; ?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
-            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= htmlspecialchars($lotData['lot-name'] ?? ''); ?>">
+            <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= sanitizeInput($lotData['lot-name'] ?? ''); ?>">
             <?php
             if ($classname): ?>
                 <span class="form__error"><?= $errors['lot-name']; ?></span>
@@ -27,9 +27,9 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
                 <option>Выберите категорию</option>
                 <?php
                 foreach ($categories as $category): ?>
-                    <option value="<?= htmlspecialchars($category['id']); ?>"
+                    <option value="<?= sanitizeInput($category['id']); ?>"
                         <?= isset($lotData['category']) && $lotData['category'] == $category['id'] ? 'selected' : ''; ?>>
-                        <?= htmlspecialchars($category['name']); ?>
+                        <?= sanitizeInput($category['name']); ?>
                     </option>
                 <?php
                 endforeach; ?>
@@ -42,7 +42,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
     <?php $classname = isset($errors['message']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--wide <?= $classname; ?>">
         <label for="description">Описание <sup>*</sup></label>
-        <textarea id="description" name="description" placeholder="Напишите описание лота"><?= htmlspecialchars($lotData['message'] ?? ''); ?></textarea>
+        <textarea id="description" name="description" placeholder="Напишите описание лота"><?= sanitizeInput($lotData['message'] ?? ''); ?></textarea>
         <?php if ($classname): ?>
         <span class="form__error"><?= $errors['description']; ?></span>
         <?php endif; ?>
@@ -64,7 +64,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-rate']) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
             <label for="lot-rate">Начальная цена <sup>*</sup></label>
-            <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= htmlspecialchars($lotData['lot-rate'] ?? ''); ?>">
+            <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= sanitizeInput($lotData['lot-rate'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-rate']; ?></span>
             <?php endif; ?>
@@ -72,7 +72,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-step']) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= htmlspecialchars($lotData['lot-step'] ?? ''); ?>">
+            <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= sanitizeInput($lotData['lot-step'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-step']; ?></span>
             <?php endif; ?>
@@ -80,7 +80,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         <?php $classname = isset($errors['lot-date']) ? "form__item--invalid" : ""; ?>
         <div class="form__item <?= $classname; ?>">
             <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
-            <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= htmlspecialchars($lotData['lot-date'] ?? ''); ?>">
+            <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= sanitizeInput($lotData['lot-date'] ?? ''); ?>">
             <?php if ($classname): ?>
             <span class="form__error"><?= $errors['lot-date']; ?></span>
             <?php endif; ?>

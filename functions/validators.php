@@ -287,6 +287,18 @@ function validateAddLotForm(array $postData, mysqli $dbConnection): array
 }
 
 /**
+ * Очищает входные данные, экранируя HTML-специальные символы.
+ *
+ * @param string|null $input Входная строка, которую нужно очистить.
+ * @return string Очищенная строка. Если передано null, вернётся пустая строка.
+ */
+function sanitizeInput(?string $input): string
+{
+    return $input === null ? '' : htmlspecialchars($input);
+}
+
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *

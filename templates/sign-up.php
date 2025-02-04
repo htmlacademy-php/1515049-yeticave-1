@@ -2,7 +2,7 @@
     <h2>Регистрация нового аккаунта</h2>
     <div class="form__item<?= isset($errors['email']) ? ' form__item--invalid' : '' ?>">
         <label for="email">E-mail <sup>*</sup></label>
-        <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?= htmlspecialchars($formData['email'] ?? '') ?>">
+        <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?= sanitizeInput($formData['email'] ?? '') ?>">
         <span class="form__error"><?= $errors['email'] ?? 'Введите e-mail' ?></span>
     </div>
     <div class="form__item<?= isset($errors['password']) ? ' form__item--invalid' : '' ?>">
@@ -12,12 +12,12 @@
     </div>
     <div class="form__item<?= isset($errors['name']) ? ' form__item--invalid' : '' ?>">
         <label for="name">Имя <sup>*</sup></label>
-        <input id="name" type="text" name="name" placeholder="Введите имя" value="<?= htmlspecialchars($formData['name'] ?? '') ?>">
+        <input id="name" type="text" name="name" placeholder="Введите имя" value="<?= sanitizeInput($formData['name'] ?? '') ?>">
         <span class="form__error"><?= $errors['name'] ?? 'Введите имя' ?></span>
     </div>
     <div class="form__item<?= isset($errors['contacts']) ? ' form__item--invalid' : '' ?>">
         <label for="contacts">Контактные данные <sup>*</sup></label>
-        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= htmlspecialchars($formData['contacts'] ?? '') ?></textarea>
+        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= sanitizeInput($formData['contacts'] ?? '') ?></textarea>
         <span class="form__error"><?= $errors['contacts'] ?? 'Напишите как с вами связаться' ?></span>
     </div>
     <?php if (!empty($errors)): ?>
