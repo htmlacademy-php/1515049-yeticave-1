@@ -238,7 +238,7 @@ function validateAddLotForm(array $postData, mysqli $dbConnection): array
     $errorMessages = [
         'lot-name' => 'Введите наименование лота',
         'category' => 'Выберите категорию',
-        'contacts' => 'Напишите описание лота',
+        'description' => 'Напишите описание лота',
         'lot-img' => 'Загрузите изображение',
         'lot-rate' => 'Введите начальную цену',
         'lot-step' => 'Введите шаг ставки',
@@ -325,7 +325,7 @@ function sanitizeInput(?string $input): string
  * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
  * @param string $many Форма множественного числа для остальных чисел
  *
- * @return string Рассчитанная форма множественнго числа
+ * @return string Рассчитанная форма множественного числа
  */
 function getNounPluralForm(int $number, string $one, string $two, string $many): string
 {
