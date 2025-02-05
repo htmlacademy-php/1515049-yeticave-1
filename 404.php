@@ -2,7 +2,6 @@
 
 require_once 'init.php';
 
-/** @var int $isAuth */
 /** @var string $userName */
 /** @var mysqli $dbConnection */
 
@@ -17,7 +16,6 @@ $pageContent = includeTemplate('404.php', [
 $layoutContent = includeTemplate('layout.php', [
     'content' => $pageContent,
     'title' => "404-страница не найдена",
-    'isAuth' => $isAuth,
     'userName' => $userName,
     'categories' => $categories,
 ]);

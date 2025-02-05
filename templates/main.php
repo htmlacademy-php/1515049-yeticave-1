@@ -1,5 +1,7 @@
 <?php
 /** @var array $categories */
+/** @var int $categoryId */
+/** @var string $categoryName */
 
 /** @var array $lots */
 ?>
@@ -8,6 +10,8 @@
     <div class="lots__header"><?php
         if (!empty($searchQuery)): ?>
             <h2>Результаты поиска по запросу «<span><?= sanitizeInput($searchQuery) ?></span>»</h2>
+        <?php elseif(!empty($categoryId)): ?>
+            <h2>Все лоты в категории <span>«<?= $categoryName; ?>»</span></h2>
         <?php
         else: ?>
             <h2>Открытые лоты</h2>

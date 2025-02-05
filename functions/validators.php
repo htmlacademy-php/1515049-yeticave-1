@@ -45,29 +45,36 @@ function validateLoginForm(array $form): array {
 
 
 /**
- * Проверяет, авторизован ли пользователь.
- * Если пользователь был удален из базы данных при использовании сайта, разлогинивает его
+ * Проверяет, авторизован ли пользователь и возвращает его данные.
+ * Если пользователь был удален из базы, разлогинивает его.
  *
  * @param mysqli $dbConnection ресурс соединения
- * @return int 1, если пользователь авторизован, 0 — если нет.
+ * @return array|null Массив с данными пользователя или null, если не авторизован.
  */
-function isUserAuthenticated(mysqli $dbConnection): int {
-    if (!isset($_SESSION['user'])) {
-        return 0;
+function getUserData(mysqli $dbConnection): ?array {
+    if (!isset($_SESSION['user_id'])) {
+        return null;
     }
 
-    $userId = $_SESSION['user']['id'];
-    $query = "SELECT id FROM users WHERE id = ?";
+    $userId = $_SESSION['user_id']['id'];
+    $query = "SELECT id, name, email FROM users WHERE id = ?";
     $stmt = dbGetPrepareStmt($dbConnection, $query, [$userId]);
-    mysqli_stmt_execute($stmt);
+    if (!mysqli_stmt_execute($stmt)) {
+        return null;
+    }
     $result = mysqli_stmt_get_result($stmt);
-
-    if (mysqli_num_rows($result) === 0) {
-        unset($_SESSION['user']);
-        return 0;
+    if ($result === false) {
+        return null;
     }
 
-    return 1;
+    $user = mysqli_fetch_assoc($result);
+
+    if (!$user) {
+        unset($_SESSION['user_id']);
+        return null;
+    }
+
+    return $user;
 }
 
 /**

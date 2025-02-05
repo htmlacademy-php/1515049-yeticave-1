@@ -3,7 +3,6 @@
 require_once("init.php");
 
 /** @var mysqli $dbConnection */
-/** @var int $isAuth */
 /** @var string $userName */
 
 $categories = getCategories($dbConnection);
@@ -21,7 +20,6 @@ $content = includeTemplate("main.php", [
 $layoutContent = includeTemplate('layout.php', [
     'content' => $content,
     'title' => "Поиск",
-    'isAuth' => $isAuth,
     'userName' => $userName,
     'categories' => $categories,
     'searchQuery' => $searchQuery,

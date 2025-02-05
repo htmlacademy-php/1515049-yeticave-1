@@ -3,7 +3,6 @@
 require_once 'init.php';
 
 /** @var mysqli $dbConnection */
-/** @var bool $isAuth */
 /** @var string $userName */
 
 $categories = getCategories($dbConnection);
@@ -37,7 +36,6 @@ $pageContent = includeTemplate('sign-up.php', [
 $layoutContent = includeTemplate('layout.php', [
     'content' => $pageContent,
     'title' => "Регистрация",
-    'isAuth' => $isAuth,
     'userName' => $userName,
     'categories' => $categories,
 ]);

@@ -1,7 +1,7 @@
 <?php
 /** @var array $categories */
 /** @var array|null $lot Данные лота */
-/** @var int $isAuth */
+/** @var string $userName */
 
 $remainingTime = calculatesRemainingTime($lot["ended_at"]);
 $hours = $remainingTime[0];
@@ -28,7 +28,7 @@ if ($lot['last_rate'] !== null) {
             <p class="lot-item__description"><?= sanitizeInput($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
-            <?php if($isAuth === 1): ?>
+            <?php if($userName): ?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer <?= $class ?>">
                     <?=$hours ?>:<?=$minutes ?>
