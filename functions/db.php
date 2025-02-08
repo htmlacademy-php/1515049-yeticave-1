@@ -1,6 +1,43 @@
 <?php
 
 /**
+ * Получает список ставок для указанного лота
+ *
+ * @param mysqli $dbConnection Подключение к базе данных
+ * @param int $lotId ID лота
+ * @return array Массив ставок
+ */
+function getLotRates(mysqli $dbConnection, int $lotId): array {
+    $sql = "SELECT b.amount, u.name, b.created_at
+            FROM rates b
+            JOIN users u ON b.user_id = u.id
+            WHERE b.lot_id = ?
+            ORDER BY b.created_at DESC";
+
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Добавляет ставку в базу данных
+ *
+ * @param mysqli $dbConnection Соединение с базой данных
+ * @param int $userId ID пользователя
+ * @param int $lotId ID лота
+ * @param int $rateValue Сумма ставки
+ * @return bool Успешность добавления
+ */
+function addRate(mysqli $dbConnection, int $userId, int $lotId, int $rateValue): bool {
+    $sql = "INSERT INTO rates (user_id, lot_id, amount, created_at) VALUES (?, ?, ?, NOW())";
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$userId, $lotId, $rateValue]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
  * Получает ID пользователя, который сделал последнюю ставку по лоту.
  *
  * @param mysqli $dbConnection Соединение с базой данных.

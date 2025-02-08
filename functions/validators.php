@@ -8,6 +8,10 @@
  * @return string|null Ошибка или null, если ставка корректна
  */
 function validateRate(mixed $rateValue, int $minRate): ?string {
+    if (empty($rateValue)) {
+        return "Сделайте вашу ставку.";
+    }
+
     $error = validatePositiveInt($rateValue);
     if ($error) {
         return "Ставка должна быть целым положительным числом.";
