@@ -4,6 +4,7 @@ require_once 'init.php';
 
 /** @var string $userName */
 /** @var mysqli $dbConnection */
+/** @var array $categories */
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
@@ -11,8 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id']['id'];
-
-$categories = getCategories($dbConnection);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = handleAddLotForm($_POST, $_FILES, $dbConnection, $categories, $_SESSION['user_id']['id']);

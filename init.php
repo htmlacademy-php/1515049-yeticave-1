@@ -14,6 +14,7 @@ require_once 'functions/handle-form.php';
 
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
+$categories = getCategories($dbConnection);
 
 $user = getUserData($dbConnection);
 $userName = $user ? $user['name'] : '';

@@ -5,8 +5,7 @@ require_once 'init.php';
 /** @var string $userName */
 /** @var mysqli $dbConnection */
 /** @var int|string $userId */
-
-$categories = getCategories($dbConnection);
+/** @var array $categories */
 
 $lotId = getLotIdFromQueryParams($dbConnection);
 $lot = getLotById($dbConnection, $lotId);

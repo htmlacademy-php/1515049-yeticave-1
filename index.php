@@ -4,8 +4,7 @@ require_once 'init.php';
 
 /** @var mysqli $dbConnection */
 /** @var string $userName */
-
-$categories = getCategories($dbConnection);
+/** @var array $categories */
 
 $categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
 

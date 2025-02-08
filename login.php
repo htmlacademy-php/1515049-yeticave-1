@@ -4,8 +4,8 @@ require_once("init.php");
 
 /** @var mysqli $dbConnection */
 /** @var string $userName */
+/** @var array $categories */
 
-$categories = getCategories($dbConnection);
 $content = includeTemplate('login.php');
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
