@@ -1,19 +1,6 @@
 <?php
 
 /**
- * Обрабатывает успешный вход пользователя.
- *
- * @param array $user Ассоциативный массив с данными авторизованного пользователя.
- *
- * @return void
- */
-function handleSuccessfulLogin(array $user): void {
-    $_SESSION['user'] = $user;
-    header('Location: /');
-    exit();
-}
-
-/**
  * Подсчитывает время до окончания показа лота
  * @param string $date
  * @return array

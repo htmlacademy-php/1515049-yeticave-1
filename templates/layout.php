@@ -2,9 +2,10 @@
 /** @var  $title */
 /** @var array $categories */
 /** @var array $lots */
-/** @var  int $isAuth */
 /** @var  string $userName */
 /** @var  $content */
+/** @var  $searchQuery */
+/** @var  $categoryId */
 
 $isLotPage = TRUE;
 
@@ -29,11 +30,11 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <a class="main-header__logo" href="/">
                 <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
             </a>
-            <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
-                <input type="search" name="search" placeholder="Поиск лота">
+            <form class="main-header__search" method="get" action="/search.php" autocomplete="off">
+                <input type="search" name="search" placeholder="Поиск лота" value="<?= isset($searchQuery) ? sanitizeInput($searchQuery) : '' ?>">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <?php if($isAuth === 1): ?>
+            <?php if($userName): ?>
             <a class="main-header__add-lot button" href="../add.php">Добавить лот</a>
             <?php endif; ?>
 
@@ -41,9 +42,9 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
 
                 <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
                 <?php
-                if ($isAuth === 1): ?>
+                if ($userName): ?>
                     <div class="user-menu__logged">
-                        <p><?= htmlspecialchars($userName); ?></p>
+                        <p><?= sanitizeInput($userName); ?></p>
                         <a class="user-menu__bets" href="../pages/my-bets.html">Мои ставки</a>
                         <a class="user-menu__logout" href="../logout.php">Выход</a>
                     </div>
@@ -54,7 +55,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                             <a href="/sign-up.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="../login.php">Вход</a>
+                            <a href="/login.php">Вход</a>
                         </li>
                     </ul>
 
@@ -66,13 +67,13 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
     </header>
 
     <?php
-    if (!$isHomePage): ?>
+    if (!$isHomePage || $categoryId): ?>
         <nav class="nav">
             <ul class="nav__list container">
                 <?php
                 foreach ($categories as $category): ?>
-                    <li class="nav__item">
-                        <a href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]) ?></a>
+                    <li class="nav__item <?= $category['id'] == $categoryId ? 'nav__item--current' : '' ?>">
+                        <a href="/?category_id=<?= $category['id'] ?>"><?= sanitizeInput($category["name"]) ?></a>
                     </li>
                 <?php
                 endforeach; ?>
@@ -84,7 +85,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
 
     <main class="container">
         <?php
-        if ($isHomePage): ?>
+        if ($isHomePage && !$categoryId): ?>
             <section class="promo">
                 <h2 class="promo__title">Нужен стафф для катки?</h2>
                 <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и
@@ -93,8 +94,8 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                     <!--заполните этот список из массива категорий-->
                     <?php
                     foreach ($categories as $category): ?>
-                        <li class="promo__item promo__item--<?= htmlspecialchars($category["symbol_code"]) ?>">
-                            <a class="promo__link" href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]) ?></a>
+                        <li class="promo__item promo__item--<?= sanitizeInput($category["symbol_code"]) ?>">
+                            <a class="promo__link" href="/?category_id=<?= $category['id'] ?>"><?= sanitizeInput($category["name"]) ?></a>
                         </li>
                     <?php
                     endforeach; ?>
@@ -117,8 +118,8 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <!--заполните этот список из массива категорий-->
             <?php
             foreach ($categories as $category): ?>
-                <li class="nav__item">
-                    <a href="/?category_id=<?= $category['id'] ?>"><?= htmlspecialchars($category["name"]); ?></a>
+                <li class="nav__item <?= $category['id'] == $categoryId ? 'nav__item--current' : '' ?>">
+                    <a href="/?category_id=<?= $category['id'] ?>"><?= sanitizeInput($category["name"]); ?></a>
                 </li>
             <?php
             endforeach; ?>
@@ -167,7 +168,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 </svg>
             </a>
         </div>
-        <?php if($isAuth === 1): ?>
+        <?php if($userName): ?>
         <a class="main-footer__add-lot button" href="/add.php">Добавить лот</a>
         <?php endif; ?>
         <div class="main-footer__developed-by">
