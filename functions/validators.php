@@ -1,6 +1,26 @@
 <?php
 
 /**
+ * Валидирует введенную ставку
+ *
+ * @param mixed $rateValue
+ * @param int $minRate
+ * @return string|null Ошибка или null, если ставка корректна
+ */
+function validateRate(mixed $rateValue, int $minRate): ?string {
+    $error = validatePositiveInt($rateValue);
+    if ($error) {
+        return "Ставка должна быть целым положительным числом.";
+    }
+
+    if ((int) $rateValue < $minRate) {
+        return "Ставка должна быть не меньше $minRate.";
+    }
+
+    return null;
+}
+
+/**
  * Аутентификация пользователя по email и паролю.
  *
  * @param string $email Email пользователя, введённый для аутентификации.

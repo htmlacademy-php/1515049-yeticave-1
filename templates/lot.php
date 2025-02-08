@@ -2,6 +2,9 @@
 /** @var array $categories */
 /** @var array|null $lot Данные лота */
 /** @var string $userName */
+/** @var string $isAuctionEnded */
+/** @var string $isLotOwner */
+/** @var string $isLastRateByUser */
 
 $remainingTime = calculatesRemainingTime($lot["ended_at"]);
 $hours = $remainingTime[0];
@@ -10,11 +13,12 @@ $class = ($hours < 1) ? 'timer--finishing' : '';
 
 if ($lot['last_rate'] !== null) {
     $currentPrice = $lot['last_rate'];
-    $minBid = $lot['last_rate'] + $lot['rate_step'];
+    $minRate = $lot['last_rate'] + $lot['rate_step'];
 } else {
     $currentPrice = $lot['start_price'];
-    $minBid = $lot['start_price'] + $lot['rate_step'];
+    $minRate = $lot['start_price'] + $lot['rate_step'];
 }
+
 ?>
 
 <section class="lot-item container">
@@ -28,7 +32,7 @@ if ($lot['last_rate'] !== null) {
             <p class="lot-item__description"><?= sanitizeInput($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
-            <?php if($userName): ?>
+            <?php if($userName && !$isAuctionEnded && !$isLotOwner && !$isLastRateByUser): ?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer <?= $class ?>">
                     <?=$hours ?>:<?=$minutes ?>
@@ -39,10 +43,10 @@ if ($lot['last_rate'] !== null) {
                         <span class="lot-item__cost"><?= sanitizeInput(formatPrice($currentPrice)) ?></span>
                     </div>
                     <div class="lot-item__min-cost">
-                        Мин. ставка <span><?= sanitizeInput(formatPrice($minBid)) ?></span>
+                        Мин. ставка <span><?= sanitizeInput(formatPrice($minRate)) ?></span>
                     </div>
                 </div>
-                <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
+                <form class="lot-item__form" action="/lot.php" method="post" autocomplete="off">
                     <p class="lot-item__form-item form__item"> <!-- form__item--invalid -->
                         <label for="cost"> Ваша ставка </label>
                         <input id="cost" type="text" name="cost" placeholder="12 000">

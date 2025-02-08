@@ -6,10 +6,13 @@ require_once("init.php");
 /** @var string $userName */
 
 $categories = getCategories($dbConnection);
+$searchQuery = '';
+$lots = [];
 
-$searchQuery = trim($_GET['search'] ?? '');
-$lots = $searchQuery ? searchLots($dbConnection, $searchQuery) : getLots($dbConnection);
-
+if ($_SERVER['REQUEST_METHOD'] === "GET") {
+    $searchQuery = trim($_GET['search'] ?? '');
+    $lots = $searchQuery ? searchLots($dbConnection, $searchQuery) : getLots($dbConnection);
+}
 
 $content = includeTemplate("main.php", [
     'categories' => $categories,

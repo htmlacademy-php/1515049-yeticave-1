@@ -1,14 +1,36 @@
 <?php
 
 /**
+ * Получает ID пользователя, который сделал последнюю ставку по лоту.
+ *
+ * @param mysqli $dbConnection Соединение с базой данных.
+ * @param int $lotId ID лота.
+ * @return int|null ID пользователя или null, если ставок нет.
+ */
+function lastRateUser(mysqli $dbConnection, int $lotId): ?int
+{
+    $sql = "SELECT user_id FROM rates WHERE lot_id = ? ORDER BY created_at DESC LIMIT 1";
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
+
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
+        return $row['user_id'] ?? null;
+    }
+
+    return null;
+}
+
+/**
  * Поиск лотов по запросу
  *
  * @param mysqli $dbConnection Соединение с БД
  * @param string $searchQuery Поисковый запрос
  * @return array Найденные лоты
  */
-function searchLots(mysqli $dbConnection, string $searchQuery): array {
-    $sql ="SELECT
+function searchLots(mysqli $dbConnection, string $searchQuery): array
+{
+    $sql = "SELECT
                 l.*,
                 c.name AS category
             FROM lots l

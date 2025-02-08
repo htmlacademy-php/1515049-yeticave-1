@@ -17,3 +17,4 @@ $dbConnection = dbConnect($config);
 
 $user = getUserData($dbConnection);
 $userName = $user ? $user['name'] : '';
+$userId = $user ? $user['id'] : '';
