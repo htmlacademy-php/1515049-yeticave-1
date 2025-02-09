@@ -9,7 +9,7 @@
     <table class="rates__list">
         <?php
         foreach ($rates as $rate): ?>
-            <tr class="rates__item <?= $rate['isLotEnded'] && !$rate['isBetWinning'] ? 'rates__item--end' : '' ?> <?= $rate['isBetWinning'] ? 'rates__item--win' : '' ?>">
+            <tr class="rates__item <?= $rate['isLotEnded'] && !$rate['isRateWinning'] ? 'rates__item--end' : '' ?> <?= $rate['isRateWinning'] ? 'rates__item--win' : '' ?>">
                 <td class="rates__info">
                     <div class="rates__img">
                         <img src="<?= sanitizeInput($rate['lot_image']) ?>" width="54" height="40"
@@ -19,7 +19,7 @@
                         <h3 class="rates__title"><a href="lot.php?id=<?= $rate['lot_id'] ?>"><?= sanitizeInput($rate['lot_title']) ?></a>
                         </h3>
                         <?php
-                        if ($rate['isBetWinning']): ?>
+                        if ($rate['isRateWinning']): ?>
                             <p><?= sanitizeInput($rate['contacts']) ?></p>
                         <?php
                         endif; ?>
@@ -30,11 +30,11 @@
                 </td>
                 <td class="rates__timer">
                     <div class="timer
-                        <?= $rate['isBetWinning'] ? 'timer--win' : ($rate['isLotEnded'] ? 'timer--end' : '') ?>
-                        <?= (!$rate['isBetWinning'] && !$rate['isLotEnded'] && (int)$rate['remaining_time'][0] == 0) ? 'timer--finishing' : '' ?>">
+                        <?= $rate['isRateWinning'] ? 'timer--win' : ($rate['isLotEnded'] ? 'timer--end' : '') ?>
+                        <?= (!$rate['isRateWinning'] && !$rate['isLotEnded'] && (int)$rate['remaining_time'][0] == 0) ? 'timer--finishing' : '' ?>">
                         <?php
                         if ($rate['isLotEnded']): ?>
-                            <?= $rate['isBetWinning'] ? 'Ставка выиграла' : 'Торги окончены' ?>
+                            <?= $rate['isRateWinning'] ? 'Ставка выиграла' : 'Торги окончены' ?>
                         <?php
                         else: ?>
                             <?= implode(':', $rate['remaining_time']) ?>

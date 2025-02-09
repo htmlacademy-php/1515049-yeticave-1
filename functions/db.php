@@ -1,6 +1,46 @@
 <?php
 
 /**
+ * Получает ID победителя для лота, основываясь на последней ставке.
+ *
+ * @param mysqli $dbConnection Ресурс соединения с БД.
+ * @param int $lotId ID лота.
+ *
+ * @return int|null ID пользователя, если ставка выиграла, иначе null.
+ */
+function getWinnerIdFromRates(mysqli $dbConnection, int $lotId): ?int
+{
+    $rates = getLotRates($dbConnection, $lotId);
+
+    if ($rates) {
+
+        return $rates[0]['user_id'];
+    }
+
+    return null;
+}
+
+/**
+ * Обновляет winner_id в таблице лотов для лота, чья ставка победила
+ *
+ * @param mysqli $link Ресурс соединения с базой данных
+ * @param int $lotId ID лота, для которого нужно обновить winner_id
+ * @param int $winnerId ID пользователя, чья ставка выиграла
+ *
+ * @return bool Возвращает true, если обновление прошло успешно, иначе false
+ */
+function updateLotWinner(mysqli $link, int $lotId, int $winnerId): bool
+{
+    $sql = "UPDATE lots SET winner_id = ? WHERE id = ?";
+    $data = [$winnerId, $lotId];
+    $stmt = dbGetPrepareStmt($link, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $result;
+}
+
+/**
  * Получает максимальную ставку для указанного лота.
  *
  * @param mysqli $dbConnection Подключение к базе данных.
@@ -67,11 +107,11 @@ function getUserRates(mysqli $dbConnection, int $userId): array
  * @return array Массив ставок
  */
 function getLotRates(mysqli $dbConnection, int $lotId): array {
-    $sql = "SELECT b.amount, u.name, b.created_at
-            FROM rates b
-            JOIN users u ON b.user_id = u.id
-            WHERE b.lot_id = ?
-            ORDER BY b.created_at DESC";
+    $sql = "SELECT r.amount, r.user_id, u.name, r.created_at
+            FROM rates r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.lot_id = ?
+            ORDER BY r.created_at DESC";
 
     $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
     mysqli_stmt_execute($stmt);

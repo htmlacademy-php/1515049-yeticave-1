@@ -26,7 +26,7 @@ foreach ($rates as $rate) {
         'rate_amount' => $rate['rate_amount'],
         'rate_created_at' => $rate['rate_created_at'],
         'isLotEnded' => $isLotEnded,
-        'isBetWinning' => $isRateWinning,
+        'isRateWinning' => $isRateWinning,
         'remaining_time' => $remainingTime,
         'formatted_price' => formatPrice($rate['rate_amount']),
         'contacts' => $rate['winner_contacts'],

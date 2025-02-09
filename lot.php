@@ -24,6 +24,14 @@ $isLotOwner = (int) $lot['author_id'] === $userId;
 $isLastRateByUser = lastRateUser($dbConnection, $lotId) === $userId;
 $errors = [];
 
+if ($isAuctionEnded) {
+    $winnerId = getWinnerIdFromRates($dbConnection, $lotId);
+
+    if ($winnerId) {
+        updateLotWinner($dbConnection, $lotId, $winnerId);
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cost'])) {
 
     if (!$userId) {
