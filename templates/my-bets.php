@@ -1,0 +1,55 @@
+<?php
+/** @var array $rates */
+
+/** @var string $userName */
+?>
+
+<section class="rates container">
+    <h2>Мои ставки</h2>
+    <table class="rates__list">
+        <?php
+        foreach ($rates as $rate): ?>
+            <tr class="rates__item <?= $rate['isLotEnded'] && !$rate['isBetWinning'] ? 'rates__item--end' : '' ?> <?= $rate['isBetWinning'] ? 'rates__item--win' : '' ?>">
+                <td class="rates__info">
+                    <div class="rates__img">
+                        <img src="<?= sanitizeInput($rate['lot_image']) ?>" width="54" height="40"
+                             alt="<?= sanitizeInput($rate['lot_title']) ?>">
+                    </div>
+                    <div>
+                        <h3 class="rates__title"><a href="lot.php?id=<?= $rate['lot_id'] ?>"><?= sanitizeInput($rate['lot_title']) ?></a>
+                        </h3>
+                        <?php
+                        if ($rate['isBetWinning']): ?>
+                            <p><?= sanitizeInput($rate['contacts']) ?></p>
+                        <?php
+                        endif; ?>
+                    </div>
+                </td>
+                <td class="rates__category">
+                    <?= sanitizeInput($rate['category_name']) ?>
+                </td>
+                <td class="rates__timer">
+                    <div class="timer
+                        <?= $rate['isBetWinning'] ? 'timer--win' : ($rate['isLotEnded'] ? 'timer--end' : '') ?>
+                        <?= (!$rate['isBetWinning'] && !$rate['isLotEnded'] && (int)$rate['remaining_time'][0] == 0) ? 'timer--finishing' : '' ?>">
+                        <?php
+                        if ($rate['isLotEnded']): ?>
+                            <?= $rate['isBetWinning'] ? 'Ставка выиграла' : 'Торги окончены' ?>
+                        <?php
+                        else: ?>
+                            <?= implode(':', $rate['remaining_time']) ?>
+                        <?php
+                        endif; ?>
+                    </div>
+                </td>
+                <td class="rates__price">
+                    <?= $rate['formatted_price'] ?>
+                </td>
+                <td class="rates__time">
+                    <?= $rate['time_ago'] ?>
+                </td>
+            </tr>
+        <?php
+        endforeach; ?>
+    </table>
+</section>

@@ -54,6 +54,7 @@ function calculatesRemainingTime(string $date): array
     $time_diff = $date - $date_now;
     $hours = str_pad((floor($time_diff / (60 * 60))), 2, '0', STR_PAD_LEFT);
     $minutes = str_pad((floor($time_diff / 60 - $hours * 60)), 2, '0', STR_PAD_LEFT);
+    $seconds = str_pad($time_diff % 60, 2, '0', STR_PAD_LEFT);
 
     if ($date < $date_now) {
         $result[] = '00';
@@ -62,6 +63,7 @@ function calculatesRemainingTime(string $date): array
 
     $result[] = $hours;
     $result[] = $minutes;
+    $result[] = $seconds;
     return $result;
 }
 

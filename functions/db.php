@@ -1,6 +1,65 @@
 <?php
 
 /**
+ * Получает максимальную ставку для указанного лота.
+ *
+ * @param mysqli $dbConnection Подключение к базе данных.
+ * @param int $lotId ID лота.
+ * @return float Максимальная ставка.
+ */
+function getMaxBetForLot(mysqli $dbConnection, int $lotId): float
+{
+    $sql = "SELECT MAX(amount) AS max_amount FROM rates WHERE lot_id = ?";
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+
+    return (float)($row['max_amount'] ?? 0);
+}
+
+/**
+ * Получает все ставки пользователя из базы данных.
+ *
+ * @param mysqli $dbConnection Подключение к базе данных.
+ * @param int $userId ID пользователя.
+ * @return array Массив ставок пользователя.
+ */
+function getUserRates(mysqli $dbConnection, int $userId): array
+{
+    $sql = "
+        SELECT
+            r.id AS rate_id,
+            r.amount AS rate_amount,
+            r.created_at AS rate_created_at,
+            l.id AS lot_id,
+            l.title AS lot_title,
+            l.image_url AS lot_image,
+            l.ended_at AS lot_end_date,
+            c.name AS category_name,
+            u.contacts AS winner_contacts
+        FROM
+            rates r
+        JOIN
+            lots l ON r.lot_id = l.id
+        JOIN
+            categories c ON l.category_id = c.id
+        JOIN
+            users u ON l.author_id = u.id
+        WHERE
+            r.user_id = ?
+        ORDER BY
+            r.created_at DESC;
+    ";
+
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$userId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
  * Получает список ставок для указанного лота
  *
  * @param mysqli $dbConnection Подключение к базе данных
