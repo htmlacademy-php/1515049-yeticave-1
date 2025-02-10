@@ -38,6 +38,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => "Регистрация",
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

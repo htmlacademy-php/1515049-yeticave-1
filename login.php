@@ -44,6 +44,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => "Вход на сайт",
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

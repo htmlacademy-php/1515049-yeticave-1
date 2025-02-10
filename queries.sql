@@ -13,17 +13,17 @@ VALUES ('Алексей Непойранов', 'Nepoiranov@mail.ru', 'password1'
        ('Ярослав Непойранов', 'Yarik@gmail.ru', 'password12', '12312312345');
 
 INSERT INTO lots (title, image_url, start_price, ended_at, rate_step, author_id, category_id)
-VALUES ('2014 Rossignol District Snowboard', 'uploads/lot-1.jpg', 10999, '2025-01-01', 100, 1,
+VALUES ('2014 Rossignol District Snowboard', 'uploads/lot-1.jpg', 10999, '2025-02-21', 100, 1,
         1),
-       ('DC Ply Mens 2016/2017 Snowboard', 'uploads/lot-2.jpg', 159999, '2024-12-31', 100, 1,
+       ('DC Ply Mens 2016/2017 Snowboard', 'uploads/lot-2.jpg', 159999, '2025-02-22', 100, 1,
         1),
        ('Крепления Union Contact Pro 2015 года размер L/XL', 'uploads/lot-3.jpg', 8000,
-        '2024-12-30', 100, 2, 2),
+        '2025-02-23', 100, 2, 2),
        ('Ботинки для сноуборда DC Mutiny Charocal', 'uploads/lot-4.jpg', 10999,
-        '2024-12-28', 100, 2, 3),
+        '2025-02-24', 100, 2, 3),
        ('Куртка для сноуборда DC Mutiny Charocal', 'uploads/lot-5.jpg', 7500,
-        '2024-12-29', 100, 1, 4),
-       ('Маска Oakley Canopy', 'uploads/lot-6.jpg', 5400, '2024-12-30', 100, 2, 6);
+        '2025-02-25', 100, 1, 4),
+       ('Маска Oakley Canopy', 'uploads/lot-6.jpg', 5400, '2025-02-26', 100, 2, 6);
 
 INSERT INTO rates (amount, user_id, lot_id)
 VALUES (5000, 1, 7);

@@ -1,6 +1,63 @@
 <?php
 
 /**
+ * Рассчитывает данные для пагинации.
+ *
+ * @param mysqli $dbConnection Подключение к базе данных.
+ * @param int|null $categoryId ID категории (null, если без категории).
+ * @param int $pageItems Количество лотов на одной странице.
+ * @param int $curPage Текущая страница.
+ *
+ * @return array{
+ *     offset: int,
+ *     pages: int[],
+ *     pagesCount: int,
+ *     prevPageUrl: string,
+ *     nextPageUrl: string
+ * } Массив с данными пагинации:
+ *   - offset: смещение для SQL-запроса,
+ *   - pages: массив номеров страниц,
+ *   - pagesCount: общее количество страниц,
+ *   - prevPageUrl: ссылка на предыдущую страницу,
+ *   - nextPageUrl: ссылка на следующую страницу.
+ */
+function getPaginationData(mysqli $dbConnection, ?int $categoryId, int $pageItems, int $curPage): array
+{
+    $offset = ($curPage - 1) * $pageItems;
+
+    $sqlCount = "SELECT COUNT(*) AS cnt FROM lots WHERE ended_at > NOW()";
+
+    if ($categoryId) {
+        $sqlCount .= " AND category_id = ?";
+        $stmt = mysqli_prepare($dbConnection, $sqlCount);
+        mysqli_stmt_bind_param($stmt, "i", $categoryId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    } else {
+        $result = mysqli_query($dbConnection, $sqlCount);
+    }
+
+    $itemsCount = mysqli_fetch_assoc($result)['cnt'];
+    $pagesCount = (int) ceil($itemsCount / $pageItems);
+    $pages = range(1, $pagesCount);
+
+    $queryParams = $_GET;
+    $queryParams['page'] = max(1, $curPage - 1);
+    $prevPageUrl = "/?" . http_build_query($queryParams);
+
+    $queryParams['page'] = min($pagesCount, $curPage + 1);
+    $nextPageUrl = "/?" . http_build_query($queryParams);
+
+    return [
+        'offset' => $offset,
+        'pages' => $pages,
+        'pagesCount' => $pagesCount,
+        'prevPageUrl' => $prevPageUrl,
+        'nextPageUrl' => $nextPageUrl
+    ];
+}
+
+/**
  * Получает ID победителя для лота, основываясь на последней ставке.
  *
  * @param mysqli $dbConnection Ресурс соединения с БД.
@@ -224,7 +281,7 @@ function dbConnect(array $config): mysqli|bool
 }
 
 /**
- * Функция выполняет SQL-запрос для выборки активных лотов. Если передан параметр $categoryId,
+ * Выполняет SQL-запрос для выборки активных лотов. Если передан параметр $categoryId,
  * то выполняется выборка только лотов из указанной категории.
  *
  * @param mysqli $con Подключение к базе данных.
@@ -232,7 +289,7 @@ function dbConnect(array $config): mysqli|bool
  * @return array Массив с лотами
  */
 
-function getLots(mysqli $con, ?int $categoryId = null): array
+function getLots(mysqli $con, ?int $categoryId = null, int $limit = 9, int $offset = 0): array
 {
     $sql = "SELECT l.id, l.title, l.start_price, l.image_url, l.created_at, l.ended_at, l.category_id,
                    c.id as category_id, c.name AS category,
@@ -242,21 +299,27 @@ function getLots(mysqli $con, ?int $categoryId = null): array
             LEFT JOIN rates r ON r.lot_id = l.id
             WHERE l.ended_at > NOW()";
 
+    $params = [];
+    $types = "";
+
     if ($categoryId !== null) {
         $sql .= " AND l.category_id = ?";
+        $params[] = $categoryId;
+        $types .= "i";
     }
 
     $sql .= " GROUP BY l.id, l.title, l.start_price, l.image_url, c.name, l.ended_at, l.created_at, l.category_id
-              ORDER BY l.ended_at, l.created_at DESC";
+              ORDER BY l.ended_at, l.created_at DESC
+              LIMIT ? OFFSET ?";
 
-    if ($categoryId === null) {
-        $result = mysqli_query($con, $sql);
-    } else {
-        $stmt = mysqli_prepare($con, $sql);
-        mysqli_stmt_bind_param($stmt, "i", $categoryId);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-    }
+    $params[] = $limit;
+    $params[] = $offset;
+    $types .= "ii";
+
+    $stmt = mysqli_prepare($con, $sql);
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         error_log("SQL Error: " . mysqli_error($con));
@@ -268,11 +331,14 @@ function getLots(mysqli $con, ?int $categoryId = null): array
 
 
 /**
- * Получение списка категорий
- * @param mysqli $con
- * @return array
+ * Получает список категорий и проверяет существование переданной категории.
+ *
+ * @param mysqli $con          Подключение к базе данных.
+ * @param int|null $categoryId ID категории для проверки (может быть null).
+ *
+ * @return array               Массив категорий
  */
-function getCategories(mysqli $con): array
+function getCategories(mysqli $con, ?int $categoryId = null): array
 {
     $sql = "SELECT * FROM categories;";
     $result = mysqli_query($con, $sql);
@@ -283,7 +349,24 @@ function getCategories(mysqli $con): array
         return [];
     }
 
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if ($categoryId !== null) {
+        $categoryExists = false;
+        foreach ($categories as $category) {
+            if ((int)$category['id'] === $categoryId) {
+                $categoryExists = true;
+                break;
+            }
+        }
+
+        if (!$categoryExists) {
+            http_response_code(403);
+            exit("Ошибка 403: Доступ запрещен. Категория не существует.");
+        }
+    }
+
+    return $categories;
 }
 
 /**

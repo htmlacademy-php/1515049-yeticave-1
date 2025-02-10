@@ -6,6 +6,7 @@ require_once 'init.php';
 /** @var mysqli $dbConnection */
 /** @var int|string $userId */
 /** @var array $categories */
+/** @var $pagination */
 
 $rates = getUserRates($dbConnection, $userId);
 
@@ -44,6 +45,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => 'Мои ставки',
     'userName' => sanitizeInput($userName),
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

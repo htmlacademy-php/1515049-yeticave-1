@@ -6,6 +6,7 @@
 /** @var  $content */
 /** @var  $searchQuery */
 /** @var  $categoryId */
+/** @var  $pagination */
 
 $isLotPage = TRUE;
 
@@ -107,6 +108,8 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <?= $content; ?>
         <?php
         endif; ?>
+
+        <?= $pagination; ?>
     </main>
 
 
