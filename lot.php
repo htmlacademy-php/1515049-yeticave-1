@@ -81,6 +81,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => $lotTitle,
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

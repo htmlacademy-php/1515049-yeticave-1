@@ -78,19 +78,36 @@ function getWinnerIdFromRates(mysqli $dbConnection, int $lotId): ?int
 }
 
 /**
+ * Получает лоты, у которых закончился срок и есть ставки, но нет победителя.
+ */
+function getLotsWithoutWinners(mysqli $db): array
+{
+    $sql = "SELECT l.id, l.title, r.user_id, u.email, u.name
+            FROM lots l
+            JOIN rates r ON l.id = r.lot_id
+            JOIN users u ON r.user_id = u.id
+            WHERE l.ended_at <= NOW()
+              AND l.winner_id IS NULL
+            ORDER BY r.created_at DESC";
+
+    $result = mysqli_query($db, $sql);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
  * Обновляет winner_id в таблице лотов для лота, чья ставка победила
  *
- * @param mysqli $link Ресурс соединения с базой данных
+ * @param mysqli $dbConnection Ресурс соединения с базой данных
  * @param int $lotId ID лота, для которого нужно обновить winner_id
  * @param int $winnerId ID пользователя, чья ставка выиграла
  *
  * @return bool Возвращает true, если обновление прошло успешно, иначе false
  */
-function updateLotWinner(mysqli $link, int $lotId, int $winnerId): bool
+function updateLotWinner(mysqli $dbConnection, int $lotId, int $winnerId): bool
 {
     $sql = "UPDATE lots SET winner_id = ? WHERE id = ?";
     $data = [$winnerId, $lotId];
-    $stmt = dbGetPrepareStmt($link, $sql, $data);
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 

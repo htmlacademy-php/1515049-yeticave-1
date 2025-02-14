@@ -6,16 +6,20 @@
  * @param string $date Дата в формате "Y-m-d H:i:s"
  * @return string Отформатированное время
  */
-function timeAgo(string $date): string {
+function timeAgo(string $date): string
+{
     $timestamp = strtotime($date);
-    $diff = time() - $timestamp;
+    $now = time();
+    $diff = $now - $timestamp;
 
     if ($diff < 60) {
-        return "$diff секунд назад";
+        return "Только что";
     } elseif ($diff < 3600) {
-        return floor($diff / 60) . " минут назад";
+        $minutes = floor($diff / 60);
+        return "$minutes " . getNounPluralForm($minutes, "минуту", "минуты", "минут") . " назад";
     } elseif ($diff < 86400) {
-        return floor($diff / 3600) . " часов назад";
+        $hours = floor($diff / 3600);
+        return "$hours " . getNounPluralForm($hours, "час", "часа", "часов") . " назад";
     } else {
         return date("d.m.y в H:i", $timestamp);
     }
@@ -26,7 +30,8 @@ function timeAgo(string $date): string {
  * @param array $lot Данные лота (должны содержать 'last_rate', 'start_price' и 'rate_step')
  * @return array Ассоциативный массив с 'current_price' и 'min_rate'
  */
-function calculateLotPrices(array $lot): array {
+function calculateLotPrices(array $lot): array
+{
     if ($lot['last_rate'] !== null) {
         $currentPrice = $lot['last_rate'];
         $minRate = $lot['last_rate'] + $lot['rate_step'];

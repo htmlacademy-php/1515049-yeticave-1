@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $authResult = authenticateUser($form['email'], $form['password'], $dbConnection);
 
         if (isset($authResult['success']) && $authResult['success'] === true) {
-            $_SESSION['user_id'] = $authResult['user'];
+            $_SESSION['user_id'] = $authResult['user']['id'];
             header('Location: /');
             exit();
         }

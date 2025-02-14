@@ -80,7 +80,7 @@ function getUserData(mysqli $dbConnection): ?array {
         return null;
     }
 
-    $userId = $_SESSION['user_id']['id'];
+    $userId = (int) $_SESSION['user_id'];
     $query = "SELECT id, name, email FROM users WHERE id = ?";
     $stmt = dbGetPrepareStmt($dbConnection, $query, [$userId]);
     if (!mysqli_stmt_execute($stmt)) {

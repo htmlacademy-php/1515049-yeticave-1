@@ -29,7 +29,7 @@
             <p class="lot-item__description"><?= sanitizeInput($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
-            <?php if($userName && !$isAuctionEnded && !$isLotOwner && !$isLastRateByUser): ?>
+            <?php if($userName && !$isAuctionEnded && !$isLotOwner && !$isLastRateByUser):?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer <?= $class ?>">
                     <?=$hours ?>:<?=$minutes ?>
