@@ -19,18 +19,11 @@ $lotPrices = calculateLotPrices($lot);
 $currentPrice = $lotPrices['current_price'];
 $minRate = $lotPrices['min_rate'];
 
-$isAuctionEnded = strtotime($lot['ended_at']) < time();
 $isLotOwner = (int) $lot['author_id'] === $userId;
 $isLastRateByUser = lastRateUser($dbConnection, $lotId) === $userId;
 $errors = [];
 
-if ($isAuctionEnded) {
-    $winnerId = getWinnerIdFromRates($dbConnection, $lotId);
-
-    if ($winnerId) {
-        updateLotWinner($dbConnection, $lotId, $winnerId);
-    }
-}
+handleEndedAuction($dbConnection, $lotId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cost'])) {
 
@@ -68,7 +61,7 @@ $content = includeTemplate('lot.php', [
     'minRate' => $minRate,
     'errors' => $errors,
     'lotId' => $lotId,
-    'isAuctionEnded' => $isAuctionEnded,
+    'isAuctionEnded' => strtotime($lot['ended_at']) < time(),
     'isLotOwner' => $isLotOwner,
     'isLastRateByUser' => $isLastRateByUser,
     'rates' => $rates,
@@ -81,6 +74,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => $lotTitle,
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

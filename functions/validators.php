@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Проверка, завершился ли аукцион, и если да, обновление победителя
+ */
+function handleEndedAuction(mysqli $dbConnection, int $lotId): void
+{
+    $lot = getLotById($dbConnection, $lotId);
+
+    // Проверяем, завершен ли аукцион
+    $isAuctionEnded = strtotime($lot['ended_at']) < time();
+    if ($isAuctionEnded) {
+        $winnerId = getWinnerIdFromRates($dbConnection, $lotId);
+
+        if ($winnerId) {
+            updateLotWinner($dbConnection, $lotId, $winnerId);
+        }
+    }
+}
+
+/**
  * Валидирует введенную ставку
  *
  * @param mixed $rateValue
@@ -80,7 +98,7 @@ function getUserData(mysqli $dbConnection): ?array {
         return null;
     }
 
-    $userId = $_SESSION['user_id']['id'];
+    $userId = (int) $_SESSION['user_id'];
     $query = "SELECT id, name, email FROM users WHERE id = ?";
     $stmt = dbGetPrepareStmt($dbConnection, $query, [$userId]);
     if (!mysqli_stmt_execute($stmt)) {

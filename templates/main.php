@@ -8,29 +8,32 @@
 
 <section class="lots">
     <div class="lots__header"><?php
-        if (!empty($searchQuery)): ?>
+    if (!empty($searchQuery)) : ?>
             <h2>Результаты поиска по запросу «<span><?= sanitizeInput($searchQuery) ?></span>»</h2>
-        <?php elseif(!empty($categoryId)): ?>
+    <?php elseif (!empty($categoryId)) : ?>
             <h2>Все лоты в категории <span>«<?= $categoryName; ?>»</span></h2>
-        <?php
-        else: ?>
+            <?php
+    else : ?>
             <h2>Открытые лоты</h2>
-        <?php
-        endif; ?>
+            <?php
+    endif; ?>
     </div>
 
     <?php
-    if (empty($lots)): ?>
+    if (empty($lots)) : ?>
         <p>Ничего не найдено по вашему запросу</p>
-    <?php
-    else: ?>
+        <?php
+    else : ?>
         <ul class="lots__list">
             <!--заполните этот список из массива с товарами-->
             <?php
-            foreach ($lots as $lot): ?>
+            foreach ($lots as $lot) : ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
-                        <img src="<?= sanitizeInput($lot["image_url"]) ?>" width="350" height="260" alt="<?= $lot["title"] ?>">
+                        <img src="<?= sanitizeInput($lot["image_url"]) ?>"
+                             width="350"
+                             height="260"
+                             alt="<?= $lot["title"] ?>">
                     </div>
                     <div class="lot__info">
                         <span class="lot__category"><?= sanitizeInput($lot["category"]) ?></span>
@@ -57,9 +60,9 @@
                         </div>
                     </div>
                 </li>
-            <?php
+                <?php
             endforeach; ?>
         </ul>
-    <?php
+        <?php
     endif; ?>
 </section>
