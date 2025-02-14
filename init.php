@@ -13,6 +13,7 @@ require_once 'functions/validators.php';
 require_once 'functions/db.php';
 require_once 'functions/process-file-upload.php';
 require_once 'functions/handle-form.php';
+require_once 'functions/email.php';
 
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
