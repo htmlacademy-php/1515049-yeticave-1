@@ -14,6 +14,22 @@ require_once 'functions/handle-form.php';
 
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
+$categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
+$categories = getCategories($dbConnection, $categoryId);
+
+$pageItems = 9;
+$curPage = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+$paginationData = getPaginationData($dbConnection, $categoryId, $pageItems, $curPage);
+
+$pagination = includeTemplate('pagination.php', [
+    'pages' => $paginationData['pages'],
+    'pagesCount' => $paginationData['pagesCount'],
+    'curPage' => $curPage,
+    'prevPageUrl' => $paginationData['prevPageUrl'],
+    'nextPageUrl' => $paginationData['nextPageUrl']
+]);
 
 $user = getUserData($dbConnection);
 $userName = $user ? $user['name'] : '';
+$userId = $user ? $user['id'] : '';

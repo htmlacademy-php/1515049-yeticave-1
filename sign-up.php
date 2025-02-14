@@ -4,8 +4,8 @@ require_once 'init.php';
 
 /** @var mysqli $dbConnection */
 /** @var string $userName */
+/** @var array $categories */
 
-$categories = getCategories($dbConnection);
 $errors = [];
 $formData = [];
 
@@ -38,6 +38,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => "Регистрация",
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

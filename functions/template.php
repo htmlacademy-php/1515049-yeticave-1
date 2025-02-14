@@ -1,6 +1,47 @@
 <?php
 
 /**
+ * Форматирует дату в "5 минут назад", "вчера", "2 дня назад" и т. д.
+ *
+ * @param string $date Дата в формате "Y-m-d H:i:s"
+ * @return string Отформатированное время
+ */
+function timeAgo(string $date): string {
+    $timestamp = strtotime($date);
+    $diff = time() - $timestamp;
+
+    if ($diff < 60) {
+        return "$diff секунд назад";
+    } elseif ($diff < 3600) {
+        return floor($diff / 60) . " минут назад";
+    } elseif ($diff < 86400) {
+        return floor($diff / 3600) . " часов назад";
+    } else {
+        return date("d.m.y в H:i", $timestamp);
+    }
+}
+
+/**
+ * Рассчитывает текущую цену лота и минимальную ставку
+ * @param array $lot Данные лота (должны содержать 'last_rate', 'start_price' и 'rate_step')
+ * @return array Ассоциативный массив с 'current_price' и 'min_rate'
+ */
+function calculateLotPrices(array $lot): array {
+    if ($lot['last_rate'] !== null) {
+        $currentPrice = $lot['last_rate'];
+        $minRate = $lot['last_rate'] + $lot['rate_step'];
+    } else {
+        $currentPrice = $lot['start_price'];
+        $minRate = $lot['start_price'] + $lot['rate_step'];
+    }
+
+    return [
+        'current_price' => $currentPrice,
+        'min_rate' => $minRate
+    ];
+}
+
+/**
  * Подсчитывает время до окончания показа лота
  * @param string $date
  * @return array
@@ -13,6 +54,7 @@ function calculatesRemainingTime(string $date): array
     $time_diff = $date - $date_now;
     $hours = str_pad((floor($time_diff / (60 * 60))), 2, '0', STR_PAD_LEFT);
     $minutes = str_pad((floor($time_diff / 60 - $hours * 60)), 2, '0', STR_PAD_LEFT);
+    $seconds = str_pad($time_diff % 60, 2, '0', STR_PAD_LEFT);
 
     if ($date < $date_now) {
         $result[] = '00';
@@ -21,6 +63,7 @@ function calculatesRemainingTime(string $date): array
 
     $result[] = $hours;
     $result[] = $minutes;
+    $result[] = $seconds;
     return $result;
 }
 

@@ -6,6 +6,7 @@
 /** @var  $content */
 /** @var  $searchQuery */
 /** @var  $categoryId */
+/** @var  $pagination */
 
 $isLotPage = TRUE;
 
@@ -45,7 +46,7 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
                 if ($userName): ?>
                     <div class="user-menu__logged">
                         <p><?= sanitizeInput($userName); ?></p>
-                        <a class="user-menu__bets" href="../pages/my-bets.html">Мои ставки</a>
+                        <a class="user-menu__bets" href="../my-bets.php">Мои ставки</a>
                         <a class="user-menu__logout" href="../logout.php">Выход</a>
                     </div>
                 <?php
@@ -107,6 +108,8 @@ $isHomePage = $_SERVER['SCRIPT_NAME'] === '/index.php';
             <?= $content; ?>
         <?php
         endif; ?>
+
+        <?= $pagination; ?>
     </main>
 
 

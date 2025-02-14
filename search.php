@@ -4,11 +4,16 @@ require_once("init.php");
 
 /** @var mysqli $dbConnection */
 /** @var string $userName */
-
-$categories = getCategories($dbConnection);
+/** @var array $categories */
 
 $searchQuery = trim($_GET['search'] ?? '');
-$lots = $searchQuery ? searchLots($dbConnection, $searchQuery) : getLots($dbConnection);
+
+if(empty($searchQuery)){
+    header("Location: /");
+    exit();
+}
+
+$lots = searchLots($dbConnection, $searchQuery);
 
 
 $content = includeTemplate("main.php", [

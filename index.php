@@ -4,12 +4,14 @@ require_once 'init.php';
 
 /** @var mysqli $dbConnection */
 /** @var string $userName */
+/** @var array $categories */
+/** @var $categoryId */
+/** @var $pageItems */
+/** @var $paginationData */
+/** @var $pagination */
 
-$categories = getCategories($dbConnection);
 
-$categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
-
-$lots = getLots($dbConnection, $categoryId);
+$lots = getLots($dbConnection, $categoryId, $pageItems, $paginationData['offset']);
 
 $categoryName = null;
 if ($categoryId) {
@@ -25,8 +27,8 @@ $pageContent = includeTemplate('main.php', [
 ]);
 
 if (empty($lots)) {
-    if($categoryId) {
-        $pageContent = "<pre><h2>Нет доступных лотов в категории <span>«" . htmlspecialchars($categoryName) . "»</span></h2>";
+    if ($categoryId) {
+        $pageContent = "<pre><h2>Нет доступных лотов в категории «" . sanitizeInput($categoryName) . "»</h2>";
     } else {
         $pageContent = "<h2>На данный момент нет доступных лотов.</h2>";
     }
@@ -38,6 +40,7 @@ $layoutContent = includeTemplate('layout.php', [
     'categoryId' => $categoryId,
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => $pagination,
 ]);
 
 print($layoutContent);

@@ -4,10 +4,9 @@ require_once 'init.php';
 
 /** @var string $userName */
 /** @var mysqli $dbConnection */
+/** @var array $categories */
 
 http_response_code(404);
-
-$categories = getCategories($dbConnection);
 
 $pageContent = includeTemplate('404.php', [
     'categories' => $categories,
