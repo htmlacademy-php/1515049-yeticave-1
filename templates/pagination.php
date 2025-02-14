@@ -10,13 +10,13 @@
 ?>
 
 <?php
-if ($pagesCount > 1): ?>
+if ($pagesCount > 1) : ?>
     <ul class="pagination-list">
         <li class="pagination-item pagination-item-prev">
             <a href="<?= $prevPageUrl ?>">Назад</a>
         </li>
         <?php
-        foreach ($pages as $page): ?>
+        foreach ($pages as $page) : ?>
             <?php
             $queryParams['page'] = $page;
             $pageUrl = "/?" . http_build_query($queryParams);
@@ -24,11 +24,11 @@ if ($pagesCount > 1): ?>
             <li class="pagination-item <?= $page === $curPage ? 'pagination-item-active' : '' ?>">
                 <a href="<?= $pageUrl ?>"><?= $page; ?></a>
             </li>
-        <?php
+            <?php
         endforeach; ?>
         <li class="pagination-item pagination-item-next">
             <a href="<?= $nextPageUrl ?>">Вперед</a>
         </li>
     </ul>
-<?php
+    <?php
 endif; ?>

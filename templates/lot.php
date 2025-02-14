@@ -29,7 +29,7 @@
             <p class="lot-item__description"><?= sanitizeInput($lot['description'])?></p>
         </div>
         <div class="lot-item__right">
-            <?php if($userName && !$isAuctionEnded && !$isLotOwner && !$isLastRateByUser):?>
+            <?php if ($userName && !$isAuctionEnded && !$isLotOwner && !$isLastRateByUser) :?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer <?= $class ?>">
                     <?=$hours ?>:<?=$minutes ?>
@@ -47,8 +47,11 @@
                     <p class="lot-item__form-item form__item <?= isset($errors['cost']) ? 'form__item--invalid' : '' ?>"> <!-- form__item--invalid -->
                         <label for="cost"> Ваша ставка </label>
                         <input id="cost" type="text" name="cost" placeholder="<?= sanitizeInput(formatPrice($minRate)) ?>">
-                        <?php if (isset($errors['cost'])): ?>
-                            <span class="form__error" style="<?= isset($errors['cost']) ? 'display: block;' : 'display: none;' ?>"><?= $errors['cost'] ?></span>
+                        <?php if (isset($errors['cost'])) : ?>
+                            <span class="form__error"
+                                  style="display: block">
+                                <?= $errors['cost'] ?>
+                            </span>
                         <?php endif; ?>
                     </p>
                     <button type="submit" class="button"> Сделать ставку</button>
@@ -60,7 +63,7 @@
                     <?= getNounPluralForm(count($rates), 'ставка', 'ставки', 'ставок') ?>
                     )</h3>
                 <table class="history__list">
-                    <?php foreach ($rates as $rate): ?>
+                    <?php foreach ($rates as $rate) : ?>
                         <tr class="history__item">
                             <td class="history__name"><?= sanitizeInput($rate['name']) ?></td>
                             <td class="history__price"><?= sanitizeInput(formatPrice($rate['amount'])) ?></td>

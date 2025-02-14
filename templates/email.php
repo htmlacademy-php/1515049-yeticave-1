@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var string $winnerName Имя победителя
  * @var string $lotTitle Название лота
