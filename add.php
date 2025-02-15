@@ -11,10 +11,10 @@ if (!isset($_SESSION['user_id'])) {
     exit('Доступ запрещён. Пожалуйста, войдите в систему.');
 }
 
-$userId = $_SESSION['user_id']['id'];
+$userId = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $result = handleAddLotForm($_POST, $_FILES, $dbConnection, $categories, $_SESSION['user_id']['id']);
+    $result = handleAddLotForm($_POST, $_FILES, $dbConnection, $categories, $_SESSION['user_id']);
 
     if ($result['success']) {
         header('Location: ' . $result['redirect']);

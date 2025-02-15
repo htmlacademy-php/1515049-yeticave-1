@@ -32,9 +32,9 @@ VALUES ('2014 Rossignol District Snowboard', 'Здесь должно быть �
         '2025-02-26', 100, 2, 6);
 
 INSERT INTO rates (amount, user_id, lot_id)
-VALUES (5000, 1, 1);
+VALUES (11099, 1, 1);
 INSERT INTO rates (amount, user_id, lot_id)
-VALUES (2000, 2, 2);
+VALUES (160099, 2, 2);
 
 # получаем все категории
 SELECT *
