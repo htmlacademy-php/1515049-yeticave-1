@@ -7,7 +7,7 @@ use Symfony\Component\Mime\Email;
 /**
  * Отправляет email победителю
  */
-function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lotId, int $userId): void
+function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lotId): void
 {
     // Загружаем конфигурацию
     $config = include('config.php');
@@ -26,9 +26,12 @@ function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lot
 
     $mailer = new Mailer($transport);
 
-    $ratesLink = "https://localhost:8000/my-bets.php";
-
-    $emailContent = getEmailTemplate($name, $lotTitle, $lotId, $ratesLink);
+    $emailContent = getEmailTemplate([
+        'winnerName' => $name,
+        'lotTitle' => $lotTitle,
+        'lotId' => $lotId,
+        'ratesLink' => $config['site']['base_url'] . "/my-bets.php"
+    ], $config);
 
     $message = new Email();
     $message->from($mailerConfig['user']);
@@ -46,9 +49,10 @@ function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lot
 /**
  * Генерация HTML-шаблона письма
  */
-function getEmailTemplate(string $winnerName, string $lotTitle, int $lotId, string $ratesLink): string
+function getEmailTemplate(array $params, array $config): string
 {
-    ob_start();
-    includeTemplate('templates/email.php');
-    return ob_get_clean();
+    $baseUrl = $config['site']['base_url'];
+    $params['lotLink'] = $baseUrl . "/lot.php?id=" . $params['lotId'];
+
+    return includeTemplate('email.php', $params);
 }

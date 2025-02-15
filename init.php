@@ -17,7 +17,12 @@ require_once 'functions/email.php';
 $config = require 'config.php';
 $dbConnection = dbConnect($config);
 $categoryId = isset($_GET['category_id']) ? (int) $_GET['category_id'] : null;
-$categories = getCategories($dbConnection, $categoryId);
+$categories = getCategories($dbConnection);
+
+if ($categoryId !== null && !isCategoryExists($dbConnection, $categoryId)) {
+    http_response_code(404);
+    header('Location: /404.php');
+}
 
 $pageItems = 9;
 $curPage = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
