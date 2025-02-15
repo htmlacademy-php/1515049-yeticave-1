@@ -1,5 +1,9 @@
 <?php
 
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+
 /**
  * Отправляет email победителю
  */
@@ -45,6 +49,6 @@ function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lot
 function getEmailTemplate(string $winnerName, string $lotTitle, int $lotId, string $ratesLink): string
 {
     ob_start();
-    include 'templates/email.php';
+    includeTemplate('templates/email.php');
     return ob_get_clean();
 }

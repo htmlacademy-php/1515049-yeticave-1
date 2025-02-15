@@ -25,16 +25,16 @@
     </div>
     <div class="form__item<?= isset($errors['contacts']) ? ' form__item--invalid' : '' ?>">
         <label for="contacts">Контактные данные <sup>*</sup></label>
-        <textarea id="contacts"
-                  name="contacts"
-                  placeholder="Напишите как с вами связаться">
-            <?= sanitizeInput($formData['contacts'] ?? '') ?>
-        </textarea>
+        <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?= sanitizeInput(
+                $formData['contacts'] ?? ''
+            ); ?></textarea>
         <span class="form__error"><?= $errors['contacts'] ?? 'Напишите как с вами связаться' ?></span>
     </div>
-    <?php if (!empty($errors)) : ?>
+    <?php
+    if (!empty($errors)) : ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
-    <?php endif; ?>
+    <?php
+    endif; ?>
     <button type="submit" class="button">Зарегистрироваться</button>
     <a class="text-link" href="/login.php">Уже есть аккаунт</a>
 </form>

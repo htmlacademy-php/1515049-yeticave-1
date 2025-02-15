@@ -7,7 +7,6 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-
 require_once 'functions/template.php';
 require_once 'functions/validators.php';
 require_once 'functions/db.php';
@@ -25,13 +24,17 @@ $curPage = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
 $paginationData = getPaginationData($dbConnection, $categoryId, $pageItems, $curPage);
 
-$pagination = includeTemplate('pagination.php', [
-    'pages' => $paginationData['pages'],
-    'pagesCount' => $paginationData['pagesCount'],
-    'curPage' => $curPage,
-    'prevPageUrl' => $paginationData['prevPageUrl'],
-    'nextPageUrl' => $paginationData['nextPageUrl']
-]);
+if ($paginationData['pagesCount'] === 1) {
+    $pagination = '';
+} else {
+    $pagination = includeTemplate('pagination.php', [
+        'pages' => $paginationData['pages'],
+        'pagesCount' => $paginationData['pagesCount'],
+        'curPage' => $curPage,
+        'prevPageUrl' => $paginationData['prevPageUrl'],
+        'nextPageUrl' => $paginationData['nextPageUrl']
+    ]);
+}
 
 $user = getUserData($dbConnection);
 $userName = $user ? $user['name'] : '';

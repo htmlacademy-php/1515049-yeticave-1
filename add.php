@@ -34,6 +34,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => "Добавление лота",
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

@@ -125,7 +125,7 @@ function getUserData(mysqli $dbConnection): ?array {
  * @param array $formData Данные формы
  * @return array Массив с ошибками
  */
-function validateSignUpForm(array $formData): array
+function validateSignUpForm(array &$formData): array
 {
     $errors = [];
 
@@ -142,8 +142,10 @@ function validateSignUpForm(array $formData): array
     if (empty($formData['name'])) {
         $errors['name'] = 'Введите имя';
     }
-    if (empty($formData['contacts'])) {
+    if (empty(trim($formData['contacts']))) {
         $errors['contacts'] = 'Напишите как с вами связаться';
+    } else {
+        $formData['contacts'] = trim($formData['contacts']);
     }
 
     return $errors;

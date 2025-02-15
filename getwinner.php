@@ -3,10 +3,6 @@
 require_once 'init.php';
 require_once 'vendor/autoload.php';
 
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
-
 /** @var mysqli $dbConnection Ресурс подключения */
 
 $lots = getLotsWithoutWinners($dbConnection);
