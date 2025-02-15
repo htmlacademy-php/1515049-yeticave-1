@@ -7,35 +7,30 @@ use Symfony\Component\Mime\Email;
 /**
  * Отправляет email победителю
  */
-function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lotId): void
+function sendWinnerEmail(array $params): void
 {
-    // Загружаем конфигурацию
-    $config = include('config.php');
-    $mailerConfig = $config['mailer'];
-
-    // Создаем транспорт с данными из конфигурации
     $transport = Transport::fromDsn(
         sprintf(
             'smtp://%s:%s@%s:%d',
-            $mailerConfig['user'],
-            $mailerConfig['password'],
-            $mailerConfig['smtp_server'],
-            $mailerConfig['smtp_port']
+            $params['config']['mailer']['user'],
+            $params['config']['mailer']['password'],
+            $params['config']['mailer']['smtp_server'],
+            $params['config']['mailer']['smtp_port']
         )
     );
 
     $mailer = new Mailer($transport);
 
     $emailContent = getEmailTemplate([
-        'winnerName' => $name,
-        'lotTitle' => $lotTitle,
-        'lotId' => $lotId,
-        'ratesLink' => $config['site']['base_url'] . "/my-bets.php"
-    ], $config);
+        'winnerName' => $params['name'],
+        'lotTitle' => $params['lotTitle'],
+        'lotId' => $params['lotId'],
+        'ratesLink' => $params['config']['site']['base_url'] . "/my-bets.php"
+    ], $params['config']);
 
     $message = new Email();
-    $message->from($mailerConfig['user']);
-    $message->to($email);
+    $message->from($params['config']['mailer']['user']);
+    $message->to($params['email']);
     $message->subject('Ваша ставка победила');
     $message->html($emailContent);
 

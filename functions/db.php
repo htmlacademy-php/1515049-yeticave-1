@@ -67,14 +67,35 @@ function getPaginationData(mysqli $dbConnection, ?int $categoryId, int $pageItem
  */
 function getWinnerIdFromRates(mysqli $dbConnection, int $lotId): ?int
 {
-    $rates = getLotRates($dbConnection, $lotId);
+    $rate = getLastLotRate($dbConnection, $lotId);
 
-    if ($rates) {
-
-        return $rates[0]['user_id'];
+    if ($rate) {
+        return $rate['user_id'];
     }
 
     return null;
+}
+
+/**
+ * Получает последнюю ставку для указанного лота
+ *
+ * @param mysqli $dbConnection Подключение к базе данных
+ * @param int $lotId ID лота
+ * @return array Массив последней ставки
+ */
+function getLastLotRate(mysqli $dbConnection, int $lotId): array {
+    $sql = "SELECT r.amount, r.user_id, u.name, r.created_at
+            FROM rates r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.lot_id = ?
+            ORDER BY r.created_at DESC
+            LIMIT 1";
+
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_fetch_assoc($result);
 }
 
 /**
