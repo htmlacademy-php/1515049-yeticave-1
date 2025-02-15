@@ -15,5 +15,6 @@ return [
     ],
     'site' => [
         'base_url' => 'http://localhost:8000'
-    ]
+    ],
+    'lots_per_page' => 9,
 ];

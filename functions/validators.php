@@ -23,9 +23,11 @@ function handleEndedAuction(mysqli $dbConnection, int $lotId): void
  *
  * @param mixed $rateValue
  * @param int $minRate
+ * @param int|null $lastUserId
+ * @param int $currentUserId
  * @return string|null Ошибка или null, если ставка корректна
  */
-function validateRate(mixed $rateValue, int $minRate): ?string {
+function validateRate(mixed $rateValue, int $minRate, int $currentUserId, int|null $lastUserId = null): ?string {
     if (empty($rateValue)) {
         return "Сделайте вашу ставку.";
     }
@@ -37,6 +39,10 @@ function validateRate(mixed $rateValue, int $minRate): ?string {
 
     if ((int) $rateValue < $minRate) {
         return "Ставка должна быть не меньше $minRate.";
+    }
+
+    if ($lastUserId === $currentUserId) {
+        return "Вы не можете делать две ставки подряд.";
     }
 
     return null;

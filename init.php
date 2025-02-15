@@ -24,7 +24,7 @@ if ($categoryId !== null && !isCategoryExists($dbConnection, $categoryId)) {
     header('Location: /404.php');
 }
 
-$pageItems = 9;
+$pageItems = $config['lots_per_page'];
 $curPage = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
 $paginationData = getPaginationData($dbConnection, $categoryId, $pageItems, $curPage);

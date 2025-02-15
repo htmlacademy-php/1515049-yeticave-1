@@ -45,7 +45,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => 'Мои ставки',
     'userName' => sanitizeInput($userName),
     'categories' => $categories,
-    'pagination' => $pagination,
+    'pagination' => '',
 ]);
 
 print($layoutContent);
