@@ -17,6 +17,7 @@ $layoutContent = includeTemplate('layout.php', [
     'title' => "404-страница не найдена",
     'userName' => $userName,
     'categories' => $categories,
+    'pagination' => '',
 ]);
 
 print($layoutContent);

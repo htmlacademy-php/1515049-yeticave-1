@@ -23,9 +23,11 @@ function handleEndedAuction(mysqli $dbConnection, int $lotId): void
  *
  * @param mixed $rateValue
  * @param int $minRate
+ * @param int|null $lastUserId
+ * @param int $currentUserId
  * @return string|null Ошибка или null, если ставка корректна
  */
-function validateRate(mixed $rateValue, int $minRate): ?string {
+function validateRate(mixed $rateValue, int $minRate, int $currentUserId, int|null $lastUserId = null): ?string {
     if (empty($rateValue)) {
         return "Сделайте вашу ставку.";
     }
@@ -37,6 +39,10 @@ function validateRate(mixed $rateValue, int $minRate): ?string {
 
     if ((int) $rateValue < $minRate) {
         return "Ставка должна быть не меньше $minRate.";
+    }
+
+    if ($lastUserId === $currentUserId) {
+        return "Вы не можете делать две ставки подряд.";
     }
 
     return null;
@@ -125,7 +131,7 @@ function getUserData(mysqli $dbConnection): ?array {
  * @param array $formData Данные формы
  * @return array Массив с ошибками
  */
-function validateSignUpForm(array $formData): array
+function validateSignUpForm(array &$formData): array
 {
     $errors = [];
 
@@ -142,8 +148,10 @@ function validateSignUpForm(array $formData): array
     if (empty($formData['name'])) {
         $errors['name'] = 'Введите имя';
     }
-    if (empty($formData['contacts'])) {
+    if (empty(trim($formData['contacts']))) {
         $errors['contacts'] = 'Напишите как с вами связаться';
+    } else {
+        $formData['contacts'] = trim($formData['contacts']);
     }
 
     return $errors;

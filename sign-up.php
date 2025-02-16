@@ -11,6 +11,7 @@ $formData = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formData = $_POST;
+    var_dump($formData);
 
     $errors = validateSignUpForm($formData);
 
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 
 $pageContent = includeTemplate('sign-up.php', [
     'errors' => $errors,

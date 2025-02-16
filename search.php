@@ -5,6 +5,7 @@ require_once("init.php");
 /** @var mysqli $dbConnection */
 /** @var string $userName */
 /** @var array $categories */
+/** @var $pagination */
 
 $searchQuery = trim($_GET['search'] ?? '');
 
@@ -28,6 +29,7 @@ $layoutContent = includeTemplate('layout.php', [
     'userName' => $userName,
     'categories' => $categories,
     'searchQuery' => $searchQuery,
+    'pagination' => $pagination,
 ]);
 
 print($layoutContent);

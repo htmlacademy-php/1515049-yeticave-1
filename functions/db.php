@@ -67,14 +67,35 @@ function getPaginationData(mysqli $dbConnection, ?int $categoryId, int $pageItem
  */
 function getWinnerIdFromRates(mysqli $dbConnection, int $lotId): ?int
 {
-    $rates = getLotRates($dbConnection, $lotId);
+    $rate = getLastLotRate($dbConnection, $lotId);
 
-    if ($rates) {
-
-        return $rates[0]['user_id'];
+    if ($rate) {
+        return $rate['user_id'];
     }
 
     return null;
+}
+
+/**
+ * Получает последнюю ставку для указанного лота
+ *
+ * @param mysqli $dbConnection Подключение к базе данных
+ * @param int $lotId ID лота
+ * @return array Массив последней ставки
+ */
+function getLastLotRate(mysqli $dbConnection, int $lotId): array {
+    $sql = "SELECT r.amount, r.user_id, u.name, r.created_at
+            FROM rates r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.lot_id = ?
+            ORDER BY r.created_at DESC
+            LIMIT 1";
+
+    $stmt = dbGetPrepareStmt($dbConnection, $sql, [$lotId]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_fetch_assoc($result);
 }
 
 /**
@@ -95,7 +116,7 @@ function getLotsWithoutWinners(mysqli $db): array
 }
 
 /**
- * Обновляет winner_id в таблице лотов для лота, чья ставка победила
+ * Обновляет winner_id в таблице лотов для лота
  *
  * @param mysqli $dbConnection Ресурс соединения с базой данных
  * @param int $lotId ID лота, для которого нужно обновить winner_id
@@ -348,42 +369,49 @@ function getLots(mysqli $con, ?int $categoryId = null, int $limit = 9, int $offs
 
 
 /**
- * Получает список категорий и проверяет существование переданной категории.
+ * Получает список категорий.
  *
- * @param mysqli $con          Подключение к базе данных.
- * @param int|null $categoryId ID категории для проверки (может быть null).
+ * @param mysqli $con Подключение к базе данных.
  *
- * @return array               Массив категорий
+ * @return array Массив категорий.
  */
-function getCategories(mysqli $con, ?int $categoryId = null): array
+function getCategories(mysqli $con): array
 {
     $sql = "SELECT * FROM categories;";
     $result = mysqli_query($con, $sql);
 
     if (!$result) {
-        $error = mysqli_error($con);
-        error_log("SQL Error: $error");
+        error_log("SQL Error: " . mysqli_error($con));
         return [];
     }
 
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
 
-    if ($categoryId !== null) {
-        $categoryExists = false;
-        foreach ($categories as $category) {
-            if ((int)$category['id'] === $categoryId) {
-                $categoryExists = true;
-                break;
-            }
-        }
+/**
+ * Проверяет существование категории по ID.
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int $categoryId ID категории для проверки.
+ *
+ * @return bool true, если категория существует, иначе false.
+ */
+function isCategoryExists(mysqli $con, int $categoryId): bool
+{
+    $sql = "SELECT COUNT(*) FROM categories WHERE id = ?";
+    $stmt = mysqli_prepare($con, $sql);
 
-        if (!$categoryExists) {
-            http_response_code(403);
-            exit("Ошибка 403: Доступ запрещен. Категория не существует.");
-        }
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $categoryId);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
+
+        return $count > 0;
     }
 
-    return $categories;
+    return false;
 }
 
 /**

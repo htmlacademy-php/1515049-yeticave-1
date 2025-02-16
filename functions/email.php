@@ -1,34 +1,36 @@
 <?php
 
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+
 /**
  * Отправляет email победителю
  */
-function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lotId, int $userId): void
+function sendWinnerEmail(array $params): void
 {
-    // Загружаем конфигурацию
-    $config = include('config.php');
-    $mailerConfig = $config['mailer'];
-
-    // Создаем транспорт с данными из конфигурации
     $transport = Transport::fromDsn(
         sprintf(
             'smtp://%s:%s@%s:%d',
-            $mailerConfig['user'],
-            $mailerConfig['password'],
-            $mailerConfig['smtp_server'],
-            $mailerConfig['smtp_port']
+            $params['config']['mailer']['user'],
+            $params['config']['mailer']['password'],
+            $params['config']['mailer']['smtp_server'],
+            $params['config']['mailer']['smtp_port']
         )
     );
 
     $mailer = new Mailer($transport);
 
-    $ratesLink = "https://localhost:8000/my-bets.php";
-
-    $emailContent = getEmailTemplate($name, $lotTitle, $lotId, $ratesLink);
+    $emailContent = getEmailTemplate([
+        'winnerName' => $params['name'],
+        'lotTitle' => $params['lotTitle'],
+        'lotId' => $params['lotId'],
+        'ratesLink' => $params['config']['site']['base_url'] . "/my-bets.php"
+    ], $params['config']);
 
     $message = new Email();
-    $message->from($mailerConfig['user']);
-    $message->to($email);
+    $message->from($params['config']['mailer']['user']);
+    $message->to($params['email']);
     $message->subject('Ваша ставка победила');
     $message->html($emailContent);
 
@@ -42,9 +44,10 @@ function sendWinnerEmail(string $email, string $name, string $lotTitle, int $lot
 /**
  * Генерация HTML-шаблона письма
  */
-function getEmailTemplate(string $winnerName, string $lotTitle, int $lotId, string $ratesLink): string
+function getEmailTemplate(array $params, array $config): string
 {
-    ob_start();
-    include 'templates/email.php';
-    return ob_get_clean();
+    $baseUrl = $config['site']['base_url'];
+    $params['lotLink'] = $baseUrl . "/lot.php?id=" . $params['lotId'];
+
+    return includeTemplate('email.php', $params);
 }

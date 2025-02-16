@@ -37,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cost'])) {
     $lotPrices = calculateLotPrices($lot);
     $minRate = $lotPrices['min_rate'];
 
-    $error = validateRate($rateValue, $minRate);
+    $lastRateUserId = lastRateUser($dbConnection, $lotId);
+
+    $error = validateRate($rateValue, $minRate, $userId, $lastRateUserId);
 
     if ($error) {
         $errors['cost'] = $error;

@@ -12,30 +12,40 @@ INSERT INTO users (name, email, password, contacts)
 VALUES ('Алексей Непойранов', 'Nepoiranov@mail.ru', 'password1', '123123123'),
        ('Ярослав Непойранов', 'Yarik@gmail.ru', 'password12', '12312312345');
 
-INSERT INTO lots (title, image_url, start_price, ended_at, rate_step, author_id, category_id)
-VALUES ('2014 Rossignol District Snowboard', 'uploads/lot-1.jpg', 10999, '2025-02-21', 100, 1,
+INSERT INTO lots (title, description, image_url, start_price, ended_at, rate_step, author_id, category_id)
+VALUES ('2014 Rossignol District Snowboard', 'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))',
+        'img/lot-1.jpg', 10999, '2025-02-21', 100, 1,
         1),
-       ('DC Ply Mens 2016/2017 Snowboard', 'uploads/lot-2.jpg', 159999, '2025-02-22', 100, 1,
+       ('DC Ply Mens 2016/2017 Snowboard', 'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))',
+        'img/lot-2.jpg', 159999, '2025-02-22', 100, 1,
         1),
-       ('Крепления Union Contact Pro 2015 года размер L/XL', 'uploads/lot-3.jpg', 8000,
+       ('Крепления Union Contact Pro 2015 года размер L/XL',
+        'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))', 'img/lot-3.jpg', 8000,
         '2025-02-23', 100, 2, 2),
-       ('Ботинки для сноуборда DC Mutiny Charocal', 'uploads/lot-4.jpg', 10999,
+       ('Ботинки для сноуборда DC Mutiny Charocal', 'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))',
+        'img/lot-4.jpg', 10999,
         '2025-02-24', 100, 2, 3),
-       ('Куртка для сноуборда DC Mutiny Charocal', 'uploads/lot-5.jpg', 7500,
+       ('Куртка для сноуборда DC Mutiny Charocal', 'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))',
+        'img/lot-5.jpg', 7500,
         '2025-02-25', 100, 1, 4),
-       ('Маска Oakley Canopy', 'uploads/lot-6.jpg', 5400, '2025-02-26', 100, 2, 6);
+       ('Маска Oakley Canopy', 'Здесь должно быть описание лота :-) Пожалуйста, придумайте его самостоятельно)))', 'img/lot-6.jpg', 5400,
+        '2025-02-26', 100, 2, 6);
 
 INSERT INTO rates (amount, user_id, lot_id)
-VALUES (5000, 1, 7);
+VALUES (11099, 1, 1);
 INSERT INTO rates (amount, user_id, lot_id)
-VALUES (2000, 2, 10);
+VALUES (160099, 2, 2);
 
 # получаем все категории
 SELECT *
 FROM categories;
 
 # получить самые новые, открытые лоты, каждый лот включает название, стартовую цену, ссылку на изображение, цену, название категории
-SELECT l.id, l.title, l.start_price, l.image_url, c.name AS category_name,
+SELECT l.id,
+       l.title,
+       l.start_price,
+       l.image_url,
+       c.name                                 AS category_name,
        COALESCE(MAX(r.amount), l.start_price) AS current_price
 FROM lots l
        JOIN categories c ON c.id = l.category_id
