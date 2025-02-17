@@ -298,10 +298,18 @@ function validateAddLotForm(array $postData, mysqli $dbConnection): array
     ];
 
     $rules = [
-        'lot-name' => 'validateLotName',
-        'lot-rate' => 'validatePositiveFloat',
-        'lot-step' => 'validatePositiveInt',
-        'lot-date' => 'validateDate'
+        'lot-name' => function ($value) {
+            return validateLotName($value);
+        },
+        'lot-rate' => function ($value) {
+            return validatePositiveFloat($value);
+        },
+        'lot-step' => function ($value) {
+            return validatePositiveInt($value);
+        },
+        'lot-date' => function ($value) {
+            return validateDate($value);
+        }
     ];
 
     foreach ($errorMessages as $field => $message) {
