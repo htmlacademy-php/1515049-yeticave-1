@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $form = $_POST;
 
     $required = ['email', 'password'];
-    $errors = validateLoginForm($form, $dbConnection);
+    $errors = validateLoginForm($form);
 
     if (empty($errors)) {
         $authResult = authenticateUser($form['email'], $form['password'], $dbConnection);

@@ -51,7 +51,7 @@ $classnameForm = (isset($errors)) ? "form--invalid" : "";
         </div>
     </div>
     <?php
-    $classname = isset($errors['message']) ? "form__item--invalid" : ""; ?>
+    $classname = isset($errors['description']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--wide <?= $classname; ?>">
         <label for="description">Описание <sup>*</sup></label>
         <textarea id="description" name="description" placeholder="Напишите описание лота"><?= sanitizeInput(
